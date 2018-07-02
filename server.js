@@ -5,6 +5,11 @@
 var express = require('express');
 var app = express();
 
+// textToSVG stuff (https://github.com/shrhdk/text-to-svg)
+var textToSVG = require('text-to-svg');
+var textToSVG = GLOBAL.TextToSVG.loadSync();
+var textOptions = {fontSize: 70};
+
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
