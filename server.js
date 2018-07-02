@@ -5,9 +5,6 @@
 var express = require('express');
 var app = express();
 
-const TextToSVG = require('text-to-svg');
-const textToSVG = TextToSVG.loadSync();
-
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
 

@@ -42,9 +42,8 @@ input {
   font-size: 16px;
 }
 
-inpu
-
 button {
+  display: none;
   font-size: 16px;
   border-radius: 3px;
   background-color: lightgrey;
