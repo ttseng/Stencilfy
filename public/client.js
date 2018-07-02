@@ -1,12 +1,10 @@
 // show the input field item on page
 var input = document.querySelector('input[name="name"]');
 var output = document.querySelector('.name');
-
-var server = require('./server');
   
 input.oninput = function(event){
   var newText = event.target.value;
   var svg = textToSVG.getSVG(newText, textOptions);
-  output.append(svg);
+  // output.append(svg);
   // output.textContent = newText;
 }
