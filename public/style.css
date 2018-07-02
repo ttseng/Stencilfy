@@ -26,7 +26,6 @@ p {
 form {
   margin-bottom: 25px;
   padding: 15px;
-  background-color: cyan;
   display: inline-block;
   width: 100%;
   max-width: 340px;
@@ -42,6 +41,8 @@ input {
   border-radius: 3px;
   font-size: 16px;
 }
+
+inpu
 
 button {
   font-size: 16px;

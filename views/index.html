@@ -24,6 +24,7 @@
     <script src="/client.js" defer></script>
   </head>
   <body>
+    <h1 class="name"></h1>
       <form method="POST">
         <input name="name" type="text" placeholder="Your Name">
         <button type="submit">Animate!</button>
@@ -36,3 +37,15 @@
 
   </body>
 </html>
+
+<script>
+
+    // show the input field item on page
+  var input = document.querySelector('input[name="name"]');
+  var output = document.querySelector('.name');
+  
+  input.oninput = function(event){
+    var newText = event.target.value;
+    output.textContent = newText;
+  }
+</script>
