@@ -4,12 +4,14 @@ var output = document.querySelector('.name');
 
 var textOptions = {fontSize: 70};
 
+let svg; // the svg created through textToSVG
+
 input.oninput = function(event){
   // add text above input field
   var newText = event.target.value;
   output.textContent = newText;
   
   // attempt to convert text to svg
-  var textToSVG = textToSVG.getSVG(newText, textOptions);
-  console.log(textToSVG);  
+  svg = textToSVG.getSVG(newText, textOptions);
+  console.log(svg);  
 }
