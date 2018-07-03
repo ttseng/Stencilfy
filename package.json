@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "express": "^4.16.3",
-    "svg.js": "^2.6.5"
+    "svg.js": "^2.6.5",
+    "animejs": "^2.2.0"
   },
   "engines": {
     "node": "8.x"
