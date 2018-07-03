@@ -1,6 +1,6 @@
-const window   = require('svgdom');
-const SVG      = require('svg.js')(window);
-const document = window.document;
+var window   = require('svgdom');
+var SVG      = require('svg.js')(window);
+var document = window.document;
 
 // get input and output on page
 var input = document.querySelector('input[name="name"]');
