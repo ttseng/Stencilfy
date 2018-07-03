@@ -23,6 +23,8 @@
     <!-- import the webpage's client-side javascript file -->
     <script src="/client.js" defer></script>
     <script type="text/javascript" src="assets/js/anime.min.js"></script>  
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.5/svg.js"></script>
 
   </head>
   
@@ -67,6 +69,31 @@
       direction: 'alternate',
       loop: true
     });
+      
+    // show the input field item on page
+    var input = document.querySelector('input[name="name"]');
+    var output = document.querySelector('.name');
+
+    let svg; // the svg created through textToSVG
+      
+    addEventListener('keyup', updateText(text))
+
+    input.oninput = function(event){
+      // add text above input field
+      var newText = event.target.value;
+      output.textContent = newText;
+      
+      var draw = SVG('textSVG').size(300,300);
+      var text = draw.text(function(add){
+        add.tspan(newText);
+      });
+      
+      text
+        .path('M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80')
+        .animate(1000, '<>')
+        .plot('M10 80 C 40 150, 65 150, 95 80 S 150 10, 180 80')
+        .loop(true, true)
+    }
 
     </script>
   </body>

@@ -5,8 +5,6 @@
 var express = require('express');
 var app = express();
 
-var svgjs = require('svg.js');
-
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
