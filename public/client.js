@@ -4,8 +4,14 @@ var output = document.querySelector('.name');
 
 // TextToSVG stuff
 var TextToSVG = require('text-to-svg');
-var textToSVG = TextToSVG.loadSync();
+var textToSVG = TextToSVG.load("", (err, t2s) => {
+  textToSVG = t2s;
+});
 var textOptions = {fontSize: 70};
+
+// load font
+
+
   
 input.oninput = function(event){
   // add text above input field
