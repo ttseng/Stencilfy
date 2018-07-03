@@ -5,9 +5,6 @@
 var express = require('express');
 var app = express();
 
-// textToSVG stuff (https://github.com/shrhdk/text-to-svg)
-var TextToSVG = require('text-to-svg');
-var textToSVG = TextToSVG.loadSync();
 var textOptions = {fontSize: 70};
 
 // var text ="text";
