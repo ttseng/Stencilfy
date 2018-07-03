@@ -7,15 +7,15 @@
 var express = require('express');
 var app = express();
 
-// textToSVG stuff (https://github.com/shrhdk/text-to-svg)
+// TextToSVG stuff
 var TextToSVG = require('text-to-svg');
-var textToSVG = TextToSVG.loadSync();
-var textOptions = {fontSize: 70};
+var fontURL = "https://cdn.glitch.com/df69dc25-ffb4-49de-9faa-129e415fcbac%2Fslkscre.ttf?1530640044868";
 
-// var text ="text";
-// module.exports={
-//   text
-// }
+// load font
+var textToSVG = TextToSVG.load(fontURL, (err, t2s) => {
+  textToSVG = t2s;
+});
+
 
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
