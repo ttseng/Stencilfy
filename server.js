@@ -20,3 +20,15 @@ app.get('/', function(request, response) {
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+// text-to-svg test
+
+const TextToSVG = require('text-to-svg');
+const textToSVG = TextToSVG.loadSync();
+ 
+const attributes = {fill: 'red', stroke: 'black'};
+const options = {x: 0, y: 0, fontSize: 72, anchor: 'top', attributes: attributes};
+ 
+const svg = textToSVG.getSVG('hello', options);
+ 
+console.log(svg);

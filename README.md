@@ -1,7 +1,9 @@
 Text Animation
 =================
 
-Insert text and adjust sliders to change animation
+Add your name to animate it.
+
+An attempt tpo use http://animejs.com/ and https://www.npmjs.com/package/text-to-svg
 
 -------------------
 

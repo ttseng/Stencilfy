@@ -21,9 +21,8 @@
     <link rel="stylesheet" href="/style.css">
     
     <!-- import the webpage's client-side javascript file -->
-<!--     <script src="/animate.js"></script> -->
-    
-    <script src="../anime.min.js"></script>
+    <script src="/animate.js"></script>
+    <script src="/anime.min.js"></script>
 
   </head>
   
@@ -67,6 +66,16 @@
         output.textContent = newText;
       }				
     }
+      
+    var lineDrawing = anime({
+      targets: '#lineDrawing .lines path',
+      strokeDashoffset: [anime.setDashoffset, 0],
+      easing: 'easeInOutSine',
+      duration: 1500,
+      delay: function(el, i) { return i * 250 },
+      direction: 'alternate',
+      loop: true
+    });
     
     </script>
     
