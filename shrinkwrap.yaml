@@ -2,6 +2,7 @@ dependencies:
   browserify: 16.2.2
   express: 4.16.3
   text-to-svg: 3.1.3
+  uniq: 1.0.1
 packages:
   /JSONStream/1.3.3:
     dependencies:
@@ -1263,6 +1264,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-13EaeocO4edF/3JKime9rD7oB6QI8llAGhgn5fKOPyfkJbRb6NFv9pYV6dFEmpa4uRjKeBqLZP8GpuzqHlKDMQ==
+  /uniq/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-sxxa6CVIRKOoKBVBzisEuGWnNP8=
   /unpipe/1.0.0:
     dev: false
     engines:
@@ -1325,3 +1330,4 @@ specifiers:
   browserify: ^16.2.2
   express: ^4.16.3
   text-to-svg: ^3.1.3
+  uniq: ^1.0.1

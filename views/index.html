@@ -23,6 +23,9 @@
     <!-- import the webpage's client-side javascript file -->
     <script src="/client.js" defer></script>
     <script type="text/javascript" src="assets/js/anime.min.js"></script>
+    
+    <!-- bundle.js to access text-to-svg -->
+    <script src="bundle.js"></script>
 
   </head>
   
@@ -32,6 +35,10 @@
         <input name="name" type="text" placeholder="Your Name">
         <button type="submit">Animate!</button>
       </form>
+    
+    <div id="textSVG">
+      
+    </div>
     
     <div id="lineDrawing">
       <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="1" class="lines">

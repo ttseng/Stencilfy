@@ -10,10 +10,10 @@ var TextToSVG = require('text-to-svg');
 var textToSVG = TextToSVG.loadSync();
 var textOptions = {fontSize: 70};
 
-var text ="text";
-module.exports={
-  text
-}
+// var text ="text";
+// module.exports={
+//   text
+// }
 
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
