@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="/style.css">
     
     <!-- import the webpage's client-side javascript file -->
-    <script src="/views/animate.js"></script>
+    <script src="/animate.js" type="module"></script>
 
   </head>
   
@@ -52,6 +52,21 @@
           to make it easier for folks to view source and remix -->
     <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
     <script src="https://button.glitch.me/button.js"></script>
+    
+    <script>
+    // show the input field item on page
+    var input = document.querySelector('input[name="name"]');
+    var output = document.querySelector('.name');
+    input.addEventListener('keyup', updateText());
+
+    function updateText() {
+      return function() {
+        var newText = this.value;
+        output.textContent = newText;
+      }				
+    }
+    
+    </script>
     
   </body>
 </html>
