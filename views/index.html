@@ -21,10 +21,7 @@
     <link rel="stylesheet" href="/style.css">
     
     <!-- import the webpage's client-side javascript file -->
-    <script src="/client.js" defer></script>
-<!--     <script type="text/javascript" src="assets/js/anime.min.js"></script>   -->
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.5/svg.js"></script>
+    <script src="/views/animate.js"></script>
 
   </head>
   
@@ -34,9 +31,6 @@
         <input name="name" type="text" placeholder="Your Name">
         <button type="submit">Animate!</button>
       </form>
-    
-    <div id="textSVG">
-    </div>
     
     <!-- Test imported SVG -->
     
@@ -59,44 +53,5 @@
     <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
     <script src="https://button.glitch.me/button.js"></script>
     
-    <script>
-    var lineDrawing = anime({
-      targets: '#lineDrawing .lines path',
-      strokeDashoffset: [anime.setDashoffset, 0],
-      easing: 'easeInOutSine',
-      duration: 1500,
-      delay: function(el, i) { return i * 250 },
-      direction: 'alternate',
-      loop: true
-    });
-      
-    // show the input field item on page
-    var input = document.querySelector('input[name="name"]');
-    var output = document.querySelector('.name');
-      
-    // var draw = SVG('textSVG').viewbox(0, 0, 300, 140);
-    // var text = draw.text(function(add) {
-    // add.tspan( input.value )
-    // });
-      
-            
-    // text
-    //     .path('M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80')
-    //     .animate(1000, '<>')
-    //     .plot('M10 80 C 40 150, 65 150, 95 80 S 150 10, 180 80')
-    //     .loop(true, true)
-
-    // input.addEventListener('keyup', updateText(text));
-      input.addEventListener('keyup', updateText(""));
-      
-    function updateText(textPath) {
-      return function() {
-        var newText = this.value;
-        output.textContent = newText;
-        // textPath.tspan(newText);
-      }				
-    }
-
-    </script>
   </body>
 </html>
