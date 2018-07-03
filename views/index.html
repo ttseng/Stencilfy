@@ -22,18 +22,62 @@
     
     <!-- import the webpage's client-side javascript file -->
     <script src="/client.js" defer></script>
+    <script type="text/javascript" src="assets/js/anime.min.js"></script>
+
   </head>
+  
   <body>
     <h1 class="name"></h1>
       <form method="POST">
         <input name="name" type="text" placeholder="Your Name">
         <button type="submit">Animate!</button>
       </form>
+    
+    <div id="lineDrawing">
+      <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="1" class="lines">
+      <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 160.76 63.4">
+        <defs>
+          <style>.cls-1{fill:none;stroke:#231f20;stroke-miterlimit:10;}</style>
+        </defs>
+        <title>test</title>
+        <path class="cls-1" d="M92.89,137.19h10v52h-10Zm10,10.4h10V158h-10Zm0,41.6h10v10.4h-10Zm10-10.4h10v10.4h-10Z" transform="translate(-92.39 -136.69)"/>
+        <path class="cls-1" d="M122.89,189.19V158h10v31.2Zm10-31.2v-10.4h20V158Zm0,20.8v-10.4h20v10.4Zm0,20.8v-10.4h40v10.4Zm20-31.2V158h10v10.4Z" transform="translate(-92.39 -136.69)"/>
+        <path class="cls-1" d="M172.72,168.39V158h10v10.4Zm0,31.2v-10.4h30v10.4Zm10-41.6v-10.4h30V158Zm0,20.8v-10.4h20v10.4Zm20,10.4v-10.4h10v10.4Zm10,10.4v-10.4h10v10.4Z" transform="translate(-92.39 -136.69)"/>
+        <path class="cls-1" d="M222.64,137.19h10v52h-10Zm10,10.4h10V158h-10Zm0,41.6h10v10.4h-10Zm10-10.4h10v10.4h-10Z" transform="translate(-92.39 -136.69)"/>
+      </svg>
+      </g>
+    </div>
+    
+<!--     <div id="lineDrawing"> 
+      <svg viewbox="0 0 280 100">
+      <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="1" class="lines">
+        <path d="M58 80V50.12C57.7 41.6 51.14 35 43 35a15 15 0 0 0 0 30h7.5v15H43a30 30 0 1 1 0-60c16.42 0 29.5 13.23 30 29.89V80H58z" stroke-dasharray="316.85528564453125" style="stroke-dashoffset: 316.855px;"></path>
+        <path d="M73 80V20H58v60h15z" stroke-dasharray="150" style="stroke-dashoffset: 150px;"></path>
+        <path d="M58 80V49.77C58.5 33.23 71.58 20 88 20a30 30 0 0 1 30 30v30h-15V50a15 15 0 0 0-15-15c-8.14 0-14.7 6.6-15 15.12V80H58zm75 0V20h-15v60h15z" stroke-dasharray="441.1739501953125" style="stroke-dashoffset: 441.174px;"></path>
+        <path d="M118 80V49.77C118.5 33.23 131.58 20 148 20a30 30 0 0 1 30 30v30h-15V50a15 15 0 0 0-15-15c-8.14 0-14.7 6.6-15 15.12V80h-15zm-7.5-60a7.5 7.5 0 1 1-7.48 8v-1c.25-3.9 3.5-7 7.48-7z" stroke-dasharray="338.3053894042969" style="stroke-dashoffset: 338.305px;"></path>
+        <path d="M133 65a15 15 0 0 1-15-15v-7.5h-15V50a30 30 0 0 0 30 30V65zm30 15V49.77C163.5 33.23 176.58 20 193 20a30 30 0 0 1 30 30v30h-15V50a15 15 0 0 0-15-15c-8.14 0-14.7 6.6-15 15.12V80h-15z" stroke-dasharray="406.8699035644531" style="stroke-dashoffset: 406.87px;"></path>
+        <path d="M238 65a15 15 0 0 1 0-30c8.1 0 14.63 6.53 15 15h-15v15h30V49.89C267.5 33.23 254.42 20 238 20a30 30 0 0 0 0 60V65z" stroke-dasharray="301.8561706542969" style="stroke-dashoffset: 301.856px;"></path>
+        <path d="M260.48 65a7.5 7.5 0 1 1-7.48 8v-1c.26-3.9 3.5-7 7.48-7z" stroke-dasharray="47.128875732421875" style="stroke-dashoffset: 47.1289px;"></path>
+      </g>
+    </svg> 
+    </div> -->
 
     <!-- include the Glitch button to show what the webpage is about and
           to make it easier for folks to view source and remix -->
     <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
     <script src="https://button.glitch.me/button.js"></script>
+    
+    <script>
+    var lineDrawing = anime({
+      targets: '#lineDrawing .lines path',
+      strokeDashoffset: [anime.setDashoffset, 0],
+      easing: 'easeInOutSine',
+      duration: 1500,
+      delay: function(el, i) { return i * 250 },
+      direction: 'alternate',
+      loop: true
+    });
 
+    </script>
   </body>
 </html>
