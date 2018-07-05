@@ -46,7 +46,8 @@ var exports = module.exports = {};
 function setupSVG(){
 	console.log('setup svg');
 	const TextToSVG = require('text-to-svg');
-  	textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
+  	textToSVG = TextToSVG.loadSync();
+  	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
 } 
 
 function createSVG(text){
