@@ -4,6 +4,11 @@
 // init project
 var express = require('express');
 var app = express();
+var port = 3000;
+
+const bodyParser = require("body-parser");
+
+var assets = require("./assets");
 
 var textToSVG; 
 
@@ -12,28 +17,42 @@ var textToSVG;
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+app.use("/assets", assets);
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/views/index.html');  
+	// load SVG stuff on page load
+	setupSVG();
+  	response.sendFile(__dirname + '/views/index.html');  
+});
+
+app.post('/', function(req, res){
+	console.log(req.body);
+	var svg = createSVG(req.body.name);
+	console.log(svg);
+	res.redirect('..?svg=' + svg);
 });
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(port, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
 var exports = module.exports = {};
 
-exports.setupSVG = function(){
-  const TextToSVG = require('text-to-svg');
-  textToSVG = TextToSVG.loadSync();
-}
+function setupSVG(){
+	console.log('setup svg');
+	const TextToSVG = require('text-to-svg');
+  	textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
+} 
 
-exports.createSVG = function(text){
-  const attributes = {stroke: 'black'};  
-  const options = {x: 0, y: 0, fontSize: 72, anchor: 'top', attributes: attributes};
+function createSVG(text){
+  const attributes = {stroke: 'black', fill: 'transparent'};  
+  const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
   const svg = textToSVG.getSVG(text, options);
-  console.log(svg);
   return svg;
-};
+}

@@ -6,27 +6,31 @@
 }
 
 body {
-  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  font-family: "Helvetica Neue", helvetica, arial, sans-serif;
   margin: 2em;
-  text-align: center;
+  background-color: lavender;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 h1 {
-  font-style: italic;
-  color: #373fff;
+  font-size: 50px;
+  font-weight: 100;
 }
 
 .bold {
   font-weight: bold;
 }
 
-p {
-  max-width: 600px;
+#instructions{
+  padding: 25px;
+  box-shadow: 4px 5px #6864642e;
+  background: #ffffff70;
+  margin: 0 auto;
 }
 
 form {
   margin-bottom: 25px;
-  padding: 15px;
   display: inline-block;
   width: 100%;
   max-width: 340px;
@@ -44,17 +48,17 @@ input {
 }
 
 button {
-  display: none;
   font-size: 16px;
   border-radius: 3px;
-  background-color: lightgrey;
-  border: 1px solid grey;
-  box-shadow: 2px 2px teal;
+  padding: 10px 15px;
+  background-color: #3f3fb8;
+  box-shadow: 2px 2px #d0d0d07a;
+  color: white;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: yellow;
+  background-color: #6d6df3;
 }
 
 button:active {
@@ -71,7 +75,6 @@ footer {
   border-top: 1px solid lightgrey;
 }
 
-#lineDrawing{
-  width: 30%;
-  margin: 0 auto;
+#textSVG{
+  padding: 25px 5px;
 }

@@ -1,9 +1,9 @@
 Text Animation
 =================
 
-Add your name to animate it.
+Takes text input, converts it to svg, and then animates it.
 
-An attempt tpo use http://animejs.com/ and https://www.npmjs.com/package/text-to-svg
+An attempt to use http://animejs.com/ and https://www.npmjs.com/package/text-to-svg
 
 -------------------
 

@@ -1,5 +1,6 @@
 dependencies:
   animejs: 2.2.0
+  body-parser: 1.18.3
   express: 4.16.3
   requirejs: 2.3.5
   svg.js: 2.6.5
@@ -39,6 +40,23 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-h2eKGdhLR9hZuDGZvVm84iKxBFQ=
+  /body-parser/1.18.3:
+    dependencies:
+      bytes: 3.0.0
+      content-type: 1.0.4
+      debug: 2.6.9
+      depd: 1.1.2
+      http-errors: 1.6.3
+      iconv-lite: 0.4.23
+      on-finished: 2.3.0
+      qs: 6.5.2
+      raw-body: 2.3.3
+      type-is: 1.6.16
+    dev: false
+    engines:
+      node: '>= 0.8'
+    resolution:
+      integrity: sha1-WykhmP/dVTs6DyDe0FkrlWlVyLQ=
   /bytes/3.0.0:
     dev: false
     engines:
@@ -187,12 +205,31 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-CgAsyFcHGSp+eUbO7cERVfYOxzY=
+  /http-errors/1.6.3:
+    dependencies:
+      depd: 1.1.2
+      inherits: 2.0.3
+      setprototypeof: 1.1.0
+      statuses: 1.5.0
+    dev: false
+    engines:
+      node: '>= 0.6'
+    resolution:
+      integrity: sha1-i1VoC7S+KDoLW/TqLjhYC+HZMg0=
   /iconv-lite/0.4.19:
     dev: false
     engines:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-oTZqweIP51xaGPI4uPa56/Pri/480R+mo7SeU+YETByQNhDG55ycFyNLIgta9vXhILrxXDmF7ZGhqZIcuN0gJQ==
+  /iconv-lite/0.4.23:
+    dependencies:
+      safer-buffer: 2.1.2
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-neyTUVFtahjf0mB3dZT77u+8O0QB89jFdnBkd5P1JgYPbPaia3gXXOVL2fq8VyU2gMMD7SaN7QukTB/pmXYvDA==
   /inherits/2.0.3:
     dev: false
     resolution:
@@ -288,6 +325,12 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-eRzhrN1WSINYCDCbrz796z37LOe3m5tmW7RQf6oBntukAG1nmovJvhnwHHRMAfeoItc1m2Hk02WER2aQ/iqs+A==
+  /qs/6.5.2:
+    dev: false
+    engines:
+      node: '>=0.6'
+    resolution:
+      integrity: sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
   /range-parser/1.2.0:
     dev: false
     engines:
@@ -305,6 +348,17 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-vNYMd9Prk83gBQKVw/N5OJvIj4k=
+  /raw-body/2.3.3:
+    dependencies:
+      bytes: 3.0.0
+      http-errors: 1.6.3
+      iconv-lite: 0.4.23
+      unpipe: 1.0.0
+    dev: false
+    engines:
+      node: '>= 0.8'
+    resolution:
+      integrity: sha512-9esiElv1BrZoI3rCDuOuKCBRbuApGGaDPQfjSflGxdy4oyzqghxu6klEkkVIvBje+FF0BX9coEv8KqW6X/7njw==
   /requirejs/2.3.5:
     dev: false
     engines:
@@ -316,6 +370,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-kKvNJn6Mm93gAczWVJg7wH+wGYWNrDHdWvpUmHyEsgCtIwwo3bqPtV4tR5tuPaUhTOo/kvhVwd8XwwOllGYkbg==
+  /safer-buffer/2.1.2:
+    dev: false
+    resolution:
+      integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
   /send/0.16.2:
     dependencies:
       debug: 2.6.9
@@ -361,6 +419,12 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha512-zhSCtt8v2NDrRlPQpCNtw/heZLtfUDqxBM1udqikb/Hbk52LK4nQSwr10u77iopCW5LsyHpuXS0GnEc48mLeew==
+  /statuses/1.5.0:
+    dev: false
+    engines:
+      node: '>= 0.6'
+    resolution:
+      integrity: sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
   /svg.js/2.6.5:
     dev: false
     resolution:
@@ -409,6 +473,7 @@ shrinkwrapMinorVersion: 8
 shrinkwrapVersion: 3
 specifiers:
   animejs: ^2.2.0
+  body-parser: ^1.18.3
   express: ^4.16.3
   requirejs: ^2.3.5
   svg.js: ^2.6.5
