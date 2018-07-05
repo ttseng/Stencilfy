@@ -2,13 +2,12 @@
 // where your node app starts
 
 // init project
+var assets = require("./assets");
 var express = require('express');
 var app = express();
 var port = 3000;
 
 const bodyParser = require("body-parser");
-
-var assets = require("./assets");
 
 var textToSVG; 
 
