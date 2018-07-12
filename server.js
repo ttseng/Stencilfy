@@ -67,7 +67,7 @@ function createSVG(text){
   var svgPath_path = svgPath(pathD);
   console.log(svgPath_path.content);
   
-  var transformed = svgpath(path).round().toString();
+  var transformed = svgpath(pathD).round().toString();
   console.log('transformed ' + transformed);
   
   // removeCounters(svg);
