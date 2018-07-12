@@ -67,13 +67,13 @@ function createSVG(text){
   console.log('path: ' + path);
   
   var pathD = textToSVG.getD(text, options); // path data from path
-  console.log('pathD: ' + pathD);
+  // console.log('pathD: ' + pathD);
   
   var svgPath_path = svgPath(pathD);
-  console.log(svgPath_path.content);
+  // console.log(svgPath_path.content);
   
   var transformed = svgpath(pathD).round().toString();
-  console.log('transformed ' + transformed);
+  // console.log('transformed ' + transformed);
   
   // removeCounters(svg);
   // TO DO - only do the following if the character has a counter
