@@ -1,6 +1,7 @@
 dependencies:
   animejs: 2.2.0
   body-parser: 1.18.3
+  clipper-lib: 6.2.1
   express: 4.16.3
   requirejs: 2.3.5
   svg-path: 0.2.1
@@ -65,6 +66,10 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=
+  /clipper-lib/6.2.1:
+    dev: false
+    resolution:
+      integrity: sha1-Jm2Ox1dcWJ8F8j6c0APeUOIxF7Y=
   /commander/2.16.0:
     dev: false
     resolution:
@@ -490,6 +495,7 @@ shrinkwrapVersion: 3
 specifiers:
   animejs: ^2.2.0
   body-parser: ^1.18.3
+  clipper-lib: ^6.2.1
   express: ^4.16.3
   requirejs: ^2.3.5
   svg-path: ^0.2.1

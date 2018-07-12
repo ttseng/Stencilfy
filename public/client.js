@@ -22,6 +22,8 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+
+// removeCounters - an attempt using masks
 function removeCounters(svg){
   var defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
   var mask = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");

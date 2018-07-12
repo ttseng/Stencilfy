@@ -12,7 +12,10 @@ const bodyParser = require("body-parser");
 var svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
 var textToSVG; 
 
-var svgpath = require('svgpath'); //https://www.npmjs.com/package/svgpath
+var svgpath = require('svgpath'); 
+var clipper = require('clipper-lib');
+
+//https://www.npmjs.com/package/svgpath
 
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
@@ -81,5 +84,7 @@ function createSVG(text){
 
 // remove the counters from specific letters of the SVG
 function removeCounters(svg){
+  var path = textToSVG.getD(text, options); // path data from path
+  
   
 }
