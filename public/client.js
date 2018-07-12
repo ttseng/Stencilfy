@@ -45,6 +45,8 @@ function removeCounters(svg){
   svg.find('path')[0].setAttribute('clip-path', 'url(#mask)');
 }
 
+
+// booleanCounter - test the clipper.js library
 function booleanCounter(svg){
   // add original svg path
       var subjPaths = [[{X:10,Y:10},{X:110,Y:10},{X:110,Y:110},{X:10,Y:110}],[{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]]; 
@@ -95,6 +97,8 @@ function booleanCounter(svg){
   
 }
 
+// path2strings - takes paths from clipper.js and converts them to svg paths
+
 function paths2string (paths, scale) {
   var svgpath = "", i, j;
   if (!scale) scale = 1;
@@ -108,4 +112,12 @@ function paths2string (paths, scale) {
   }
   if (svgpath=="") svgpath = "M0,0";
   return svgpath;
+}
+
+function svg2paths(svg){
+  var paths = $('svg path')[0];
+  var len = paths.getTotalLength();
+  var path
+  for(var i=0; i<len; i++){
+  }
 }
