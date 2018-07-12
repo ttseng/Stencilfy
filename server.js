@@ -9,6 +9,7 @@ var port = 3000;
 
 const bodyParser = require("body-parser");
 
+var svgPath = require('svg-path');
 var textToSVG; 
 
 // we've started you off with Express, 
@@ -55,7 +56,9 @@ function createSVG(text){
   const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
   const svg = textToSVG.getSVG(text, options);
   
-  removeCounters(svg);
+  console.log('svg: ' + svg);
+  
+  // removeCounters(svg);
   return svg;
 }
 
