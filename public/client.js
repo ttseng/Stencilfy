@@ -44,3 +44,35 @@ function removeCounters(svg){
   svg.prepend(defs);
   svg.find('path')[0].setAttribute('clip-path', 'url(#mask)');
 }
+
+function booleanCounter(svg){
+  // add original svg path
+  var subjPaths = new ClipperLib.Paths();
+  var subjPath = new ClipperLib.Path();
+  var path = svg.find('path').attr('d');
+  subjPath.push(path);
+  
+  // create clipping path
+  var clipPaths = new ClipperLib.Paths();
+  var clipPath = new ClipperLib.Path();
+  var maskDim = 10;
+  var svgWidth = svg.attr('width');
+  var svgHeight = svg.attr('height');
+  clipPath.push(
+    new ClipperLib.IntPoint(svgWidth-maskDim/2,0),
+    new ClipperLib.IntPoint(svgWidth+maskDim/2,0),
+    new ClipperLib.IntPoint(svg+maskDim/2, svgHeight),
+    new ClipperLib.IntPoint(svg-maskDim/2, svgHeight)
+    );
+  clipPaths.push(clipPath);
+  
+  // create clipper
+  var cpr = new ClipperLib.Clipper();
+  cpr.AddPaths(subjPaths, ClipperLib.PolyType.ptSubject, true);
+  cpr.AddPaths(clipPaths, ClipperLib.PolyType.ptSubject, true);
+  
+  // create solutions path
+  var solutionsPath = new ClipperLib.Paths();
+  
+  var clipType = ClipperLib.ClipType.ctDifference;
+}

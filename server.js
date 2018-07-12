@@ -83,8 +83,6 @@ function createSVG(text){
 }
 
 // remove the counters from specific letters of the SVG
-function removeCounters(svg){
-  var path = textToSVG.getD(text, options); // path data from path
-  
+function removeCounters(svg){  
   
 }
