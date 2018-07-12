@@ -9,8 +9,10 @@ var port = 3000;
 
 const bodyParser = require("body-parser");
 
-var svgPath = require('svg-path');
+var svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
 var textToSVG; 
+
+var svgpath = require('svgpath'); //https://www.npmjs.com/package/svgpath
 
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
@@ -33,7 +35,6 @@ app.get('/', function(request, response) {
 app.post('/', function(req, res){
 	console.log(req.body);
 	var svg = createSVG(req.body.name);
-	console.log(svg);
 	res.redirect('..?svg=' + svg);
 });
 
@@ -57,11 +58,17 @@ function createSVG(text){
   
   // console.log('svg: ' + svg);
   
+  var path = textToSVG.getPath(text, options);
+  console.log('path: ' + path);
+  
   var pathD = textToSVG.getD(text, options);
   console.log('pathD: ' + pathD);
   
-  var path = svgPath(pathD);
-  console.log(path.content);
+  var svgPath_path = svgPath(pathD);
+  console.log(svgPath_path.content);
+  
+  var transformed = svgpath(path).round().toString();
+  console.log('transformed ' + transformed);
   
   // removeCounters(svg);
   return svg;
