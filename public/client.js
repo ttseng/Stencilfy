@@ -50,7 +50,8 @@ function removeCounters(svg){
 function booleanCounter(svg){
   // add original svg path
       // var subjPaths = [[{X:10,Y:10},{X:110,Y:10},{X:110,Y:110},{X:10,Y:110}],[{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]]; 
-  var subjPaths = svg2paths(svg);
+
+  var subjPaths = createPath($('svg'));
    
   // var path = svg.find('path').attr('d');
   // subjPath.push(path);  
@@ -124,10 +125,27 @@ function svg2paths(svg){
   for(var i=0; i<len; i++){
     var p = svgPaths.getPointAtLength(i);
     var dict = {};
-    dict["X"] = p.x;
-    dict["Y"] = p.y;
+    dict["X"] = Math.round(p.x);
+    dict["Y"] = Math.round(p.y);
     paths.push(dict);    
   }
   // console.log(paths);
+  return paths;
+}
+
+// createPath - create polygon path from an SVG to use with clipper.js
+function createPath(svg){
+  var paths = new ClipperLib.Paths();
+  var path = new ClipperLib.Path();
+  
+  var svgPaths = $('svg path')[0];
+  var len = svgPaths.getTotalLength();
+  
+  for(var i=0; i<len; i++){
+    var p = svgPaths.getPointAtLength(i);
+    path.push(new ClipperLib.IntPoint(p.x, p.y));
+  }
+  
+  paths.push(path);
   return paths;
 }
