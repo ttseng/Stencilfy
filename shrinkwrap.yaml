@@ -5,6 +5,7 @@ dependencies:
   requirejs: 2.3.5
   svg-path: 0.2.1
   svg.js: 2.6.5
+  svgpath: 2.2.1
   text-to-svg: 3.1.3
 packages:
   /accepts/1.3.5:
@@ -440,6 +441,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-vBEAhnUl6fx9i2IP7QSNpOdpN4Z5d0dl+7sur7ENuKsDJbNMZPwxZFeslHAn79TmMWHJmtzhFhZUT0sNnSc0IA==
+  /svgpath/2.2.1:
+    dev: false
+    resolution:
+      integrity: sha1-CDS7Z8iadkcrK9BswQH6e1F7Iiw=
   /text-to-svg/3.1.3:
     dependencies:
       commander: 2.16.0
@@ -489,4 +494,5 @@ specifiers:
   requirejs: ^2.3.5
   svg-path: ^0.2.1
   svg.js: ^2.6.5
+  svgpath: ^2.2.1
   text-to-svg: ^3.1.3

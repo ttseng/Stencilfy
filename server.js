@@ -45,7 +45,6 @@ var listener = app.listen(port, function () {
 var exports = module.exports = {};
 
 function setupSVG(){
-	console.log('setup svg');
 	const TextToSVG = require('text-to-svg');
   	textToSVG = TextToSVG.loadSync();
   	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
@@ -56,7 +55,13 @@ function createSVG(text){
   const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
   const svg = textToSVG.getSVG(text, options);
   
-  console.log('svg: ' + svg);
+  // console.log('svg: ' + svg);
+  
+  var pathD = textToSVG.getD(text, options);
+  console.log('pathD: ' + pathD);
+  
+  var path = svgPath(pathD);
+  console.log(path.content);
   
   // removeCounters(svg);
   return svg;
