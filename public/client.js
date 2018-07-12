@@ -22,6 +22,9 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function removeCounters(){
-  
+function removeCounters(svg){
+  var def = document.createElementNS("http://www.w3.org/2000/svg","def");
+  var mask = document.createElementNS("http://www.w3.org/2000/svg", "mask");
+  var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+  rect.set
 }

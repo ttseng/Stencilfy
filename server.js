@@ -56,7 +56,7 @@ function setupSVG(){
 function createSVG(text){
   const attributes = {stroke: 'black', fill: 'transparent'};  
   const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
-  const svg = textToSVG.getSVG(text, options);
+  const svg = textToSVG.getSVG(text, options); // string of svg
   
   // console.log('svg: ' + svg);
   
@@ -73,6 +73,9 @@ function createSVG(text){
   console.log('transformed ' + transformed);
   
   // removeCounters(svg);
+  // TO DO - only do the following if the character has a counter
+  
+  
   return svg;
 }
 
