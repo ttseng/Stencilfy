@@ -22,7 +22,6 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-
 // removeCounters - an attempt using masks
 function removeCounters(svg){
   var defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
@@ -114,23 +113,6 @@ function paths2string (paths, scale) {
   }
   if (svgpath=="") svgpath = "M0,0";
   return svgpath;
-}
-
-
-// svg2paths (convert svg to polygon paths to use with clipper.js)
-function svg2paths(svg){
-  var svgPaths = $('svg path')[0];
-  var len = svgPaths.getTotalLength();
-  var paths = [];
-  for(var i=0; i<len; i++){
-    var p = svgPaths.getPointAtLength(i);
-    var dict = {};
-    dict["X"] = Math.round(p.x);
-    dict["Y"] = Math.round(p.y);
-    paths.push(dict);    
-  }
-  // console.log(paths);
-  return paths;
 }
 
 // createPath - create polygon path from an SVG to use with clipper.js
