@@ -49,8 +49,15 @@ function booleanCounter(svg){
   // add original svg path
   var subjPaths = new ClipperLib.Paths();
   var subjPath = new ClipperLib.Path();
-  var path = svg.find('path').attr('d');
-  subjPath.push(path);
+  // var path = svg.find('path').attr('d');
+  // subjPath.push(path);
+  subjPath.push(
+    new ClipperLib.IntPoint(0, 0),
+    new ClipperLib.IntPoint(100, 0),
+    new ClipperLib.IntPoint(100, 100),
+    new ClipperLib.IntPoint(0, 100));
+  
+  
   
   // create clipping path
   var clipPaths = new ClipperLib.Paths();
@@ -58,13 +65,24 @@ function booleanCounter(svg){
   var maskDim = 10;
   var svgWidth = svg.attr('width');
   var svgHeight = svg.attr('height');
+  
   clipPath.push(
-    new ClipperLib.IntPoint(svgWidth-maskDim/2,0),
-    new ClipperLib.IntPoint(svgWidth+maskDim/2,0),
-    new ClipperLib.IntPoint(svg+maskDim/2, svgHeight),
-    new ClipperLib.IntPoint(svg-maskDim/2, svgHeight)
-    );
+    new ClipperLib.IntPoint(0, 0),
+    new ClipperLib.IntPoint(100, 0),
+    new ClipperLib.IntPoint(100, 100),
+    new ClipperLib.IntPoint(0, 100));
+  
+  // clipPath.push(
+  //   new ClipperLib.IntPoint(svgWidth-maskDim/2,0),
+  //   new ClipperLib.IntPoint(svgWidth+maskDim/2,0),
+  //   new ClipperLib.IntPoint(svg+maskDim/2, svgHeight),
+  //   new ClipperLib.IntPoint(svg-maskDim/2, svgHeight)
+  //   );
   clipPaths.push(clipPath);
+  
+  var scale = 100;
+  ClipperLib.JS.ScaleUpPaths(subjPaths, scale);
+  ClipperLib.JS.ScaleUpPaths(clipPaths, scale);
   
   // create clipper
   var cpr = new ClipperLib.Clipper();
@@ -72,7 +90,36 @@ function booleanCounter(svg){
   cpr.AddPaths(clipPaths, ClipperLib.PolyType.ptSubject, true);
   
   // create solutions path
-  var solutionsPath = new ClipperLib.Paths();
+  var solutionPath = new ClipperLib.Paths();
   
   var clipType = ClipperLib.ClipType.ctDifference;
+  var subjFillType = ClipperLib.PolyFillType.pftNonZero;
+  var clipFillType = ClipperLib.PolyFillType.pftNonZero;
+  
+  var success = cpr.Execute(clipType, solutionPath, subjFillType, clipFillType);
+  console.log(`success? ${success}`);
+  console.log(JSON.stringify(solutionPath));
+  
+  // add to page
+  svg = '<svg style="margin-top:10px; margin-right:10px;margin-bottom:10px;background-color:#dddddd" width="160" height="160">';
+    svg += '<path stroke="black" fill="yellow" stroke-width="2" d="' + paths2string(solutionPath, scale) + '"/>';
+    svg += '</svg>';
+  
+  $('body').append(svg);
+  
+}
+
+function paths2string (paths, scale) {
+  var svgpath = "", i, j;
+  if (!scale) scale = 1;
+  for(i = 0; i < paths.length; i++) {
+    for(j = 0; j < paths[i].length; j++){
+      if (!j) svgpath += "M";
+      else svgpath += "L";
+      svgpath += (paths[i][j].X / scale) + ", " + (paths[i][j].Y / scale);
+    }
+    svgpath += "Z";
+  }
+  if (svgpath=="") svgpath = "M0,0";
+  return svgpath;
 }
