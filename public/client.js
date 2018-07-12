@@ -6,10 +6,6 @@ function addSVGtoPage(){
   	var cleanSVG = decodeURI(getParameterByName("svg", url));
   	// console.log(cleanSVG);
       $('#textSVG').append(cleanSVG);
-
-      // animate SVG
-      animateSVG();
-
   }else{
     return false;
   }
@@ -24,17 +20,4 @@ function getParameterByName(name, url) {
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-function animateSVG(){
-	var lineDrawing = anime({
-      targets: '#textSVG path',
-      strokeDashoffset: [anime.setDashoffset, 0],
-      easing: 'easeInOutCirc',
-      duration: 1500,
-      delay: function(el, i) { return i * 250 },
-      direction: 'alternate',
-      loop: true,
-      speed: .5
-    });
 }

@@ -54,5 +54,11 @@ function createSVG(text){
   const attributes = {stroke: 'black', fill: 'transparent'};  
   const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
   const svg = textToSVG.getSVG(text, options);
+  
+  removeCounters(svg);
   return svg;
+}
+
+// remove the counters from specific letters of the SVG
+function removeCounters(svg){
 }

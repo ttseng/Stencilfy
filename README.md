@@ -1,9 +1,9 @@
-Text Animation
+Counter Remover
 =================
 
-Takes text input, converts it to svg, and then animates it.
+Certain letters have counters (enclosed spaces) that get completely cut out when the text is laser cut.
 
-An attempt to use http://animejs.com/ and https://www.npmjs.com/package/text-to-svg
+With this app, you will be able to auto-magically remove counters from any text and export an SVG to bring into your design-software-of-choice before laser cutting!
 
 -------------------
 
