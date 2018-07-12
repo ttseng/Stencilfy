@@ -23,7 +23,7 @@ function getParameterByName(name, url) {
 }
 
 function removeCounters(svg){
-  var def = document.createElementNS("http://www.w3.org/2000/svg","def");
+  var defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
   var mask = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
   var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
   
@@ -37,8 +37,8 @@ function removeCounters(svg){
   
   mask.setAttribute('id', 'mask');
   mask.append(rect);
-  def.append(mask);
+  defs.append(mask);
   
-  svg.prepend(def);
+  svg.prepend(defs);
   svg.find('path')[0].setAttribute('clip-path', 'url(#mask)');
 }
