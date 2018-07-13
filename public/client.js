@@ -3,8 +3,6 @@ function addSVGtoPage(origSVG, newSVG){
   $('#textSVGstencil').html(newSVG);
 }
 
-
-
 // getParameterByName - take the parameter from the url and fetch contents
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;

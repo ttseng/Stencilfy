@@ -44,10 +44,16 @@ app.get('/', function(request, response) {
   response.sendFile(__dirname + '/views/index.html');  
 });
 
+
+//////////
+// POST - get text input from textfield
+//////////
 app.post('/', function(req, res){
   console.log('post request received with input: ' + req.body.text);
   setupSVG();
+  
   input = req.body.text;
+  
 	var svgPath = textToSVG.getPath(input, options); 
   var origSVG = textToSVG.getSVG(input, options);
   
@@ -101,7 +107,7 @@ function removeCounters(svgPath) {
   
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
-  var subj_paths = createPath(svgInfo.svgPathD);
+  var subj_paths = createPath(svgInfo.pathD);
 
   var clipXstart = (svgInfo.width-maskDim)/2;
   var clipXend = (svgInfo.width+maskDim)/2;
@@ -111,8 +117,8 @@ function removeCounters(svgPath) {
   clip_path.push(
     new ClipperLib.IntPoint(clipXstart,0),
     new ClipperLib.IntPoint(clipXend,0),
-    new ClipperLib.IntPoint(clipXend, svgInfo.svgHeight),
-    new ClipperLib.IntPoint(clipXstart, svgInfo.svgHeight)
+    new ClipperLib.IntPoint(clipXend, svgInfo.height),
+    new ClipperLib.IntPoint(clipXstart, svgInfo.height)
   );
   clip_paths.push(clip_path);
   
@@ -139,9 +145,9 @@ function removeCounters(svgPath) {
 // createSVGfromSolution
 // creates a new SVG element from the clipper.js solution path
 function createSVGfromSolution(solution_paths){
-  var svgInfo = JSON.stringify(getSVGinfo(input));
+  var svgInfo = getSVGinfo(input);
   console.log('svgInfo: ' + svgInfo);
-  var newSVG = `<svg style="background-color:transparent" width="${svgInfo.svgWidth}" height="${svgInfo.svgHeight}">`;
+  var newSVG = `<svg style="background-color:transparent" width="${svgInfo.width}" height="${svgInfo.height}">`;
   newSVG += '<path stroke="black" fill="none" stroke-width="1" d="' + paths2string(solution_paths, scale) + '"/>';
   newSVG += '</svg>';  
   return newSVG;
