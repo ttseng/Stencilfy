@@ -33,7 +33,7 @@
       <h1>Stencil-ify</h1>
       <form method="POST" id="NameForm" action="/">
         <input name="name" type="text" placeholder="Your text">
-        <button type="submit">Remove Counters</button>
+        <button type="submit" class="stencilBtn">Remove Counters</button>
       </form>
     </div>
     
@@ -72,11 +72,7 @@
         // submit form here
       }				
     }
-    
-    $(window).load(function(){
-      booleanCounter($('svg'));
-      draw();
-    });    
-    
+      
+    </script>
   </body>
 </html>
