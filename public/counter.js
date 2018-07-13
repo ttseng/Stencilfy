@@ -35,7 +35,7 @@ function removeCounters(svg) {
   // perform boolean
   var solution_paths = new ClipperLib.Paths();
   cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
-  console.log(JSON.stringify(solution_paths));
+  // console.log(JSON.stringify(solution_paths));
   
   var newSVG = createSVGfromSolution(solution_paths, scale, svgWidth, svgHeight);
   return newSVG;
@@ -125,7 +125,7 @@ function demoClipper() {
   for(i = 0; i < clipTypes.length; i++) {
     solution_paths = new ClipperLib.Paths();
     cpr.Execute(clipTypes[i], solution_paths, subject_fillType, clip_fillType);
-    console.log(JSON.stringify(solution_paths));
+    // console.log(JSON.stringify(solution_paths));
     svg = '<svg style="margin-top:10px; margin-right:10px;margin-bottom:10px;background-color:#dddddd" width="160" height="160">';
     svg += '<path stroke="black" fill="yellow" stroke-width="2" d="' + paths2string(solution_paths, scale) + '"/>';
     svg += '</svg>';
