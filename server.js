@@ -9,7 +9,7 @@ const port = 3000;
 
 const bodyParser = require("body-parser");
 const svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
-const textToSVG = require('text-to-svg');
+var textToSVG = require('text-to-svg');
 const svgpath = require('svgpath'); 
 const ClipperLib = require('clipper-lib');
 const pathProperties = require('svg-path-properties');
@@ -59,13 +59,15 @@ app.post('/', function(req, res){
   var origPathArr = []; // storing individual paths for each character, before removing counters
   var newPathArr = []; // storing individual paths for each character, after removing counters
   
-  fullHeight = textToSVG.getMetrics(inputChars[0], options).height; // for now, restrict to single line
+  fullHeight = textToSVG.getMetrics(inputChars[0], defaultOptions).height; // for now, restrict to single line
   
   for(var i=0; i<inputChars.length; i++){
     var newOptions = constructOptions(i);
     var svgPath = textToSVG.getPath(inputChars[i], newOptions); 
-    console.log(`svgPath: ${svgPath}`);
-    textWidths.push(textToSVG.getMetrics(inputChars[i], options).width);
+    // console.log(`svgPath: ${svgPath}`);
+    var charWidth = textToSVG.getMetrics(inputChars[i], defaultOptions).width;
+    console.log('characterWidth: ' + characterWidth);
+    textWidths.push(charWidth);
     origPathArr.push(svgPath);
   
     // remove counter if necessary - ultimately want to iterate over ever character
@@ -74,17 +76,14 @@ app.post('/', function(req, res){
     }else{
       var newSVGpath = svgPath;
     }
-    console.log(`newSVGpath ${newSVGpath}`);
+    // console.log(`newSVGpath ${newSVGpath}`);
     newPathArr.push(newSVGpath);
   }
   // compile all paths into a single svg
   var origSVG = compileSVGfromPaths(origPathArr);
-  console.log(`origSVG: ${origSVG}`);
+  // console.log(`origSVG: ${origSVG}`);
   var newSVG = compileSVGfromPaths(newPathArr);
-  console.log(`newSVG: ${newSVG}`);
-  
-  console.log(`origSVG ${origSVG}`);
-  console.log(`newSVG ${newSVG}`);
+  // console.log(`newSVG: ${newSVG}`);
   
   // return cleaned svg
   var respBody = {origSVG, newSVG};
@@ -101,6 +100,8 @@ function constructOptions(index){
     var x = 0;
   }
   options[x] = x;
+  console.log('newX: ' + options[x]);
+  console.log(`textWidths ${textWidths}`);
   return options;
 }
 
@@ -112,7 +113,7 @@ var listener = app.listen(port, function () {
 var exports = module.exports = {};
 
 function setupSVG(){
-  	textToSVG = TextToSVG.loadSync();
+  	textToSVG = textToSVG.loadSync();
     console.log('textToSVG ready!');
   	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
 } 
@@ -182,7 +183,8 @@ function createPathFromSolution(solution_paths){
 // compileSVGfromPaths(pathsArr)
 // create an svg from a path of arrays
 function compileSVGfromPaths(pathsArr){
-  console.log(`fullWidth ${fullWidth} fullHeight ${fullHeight}`);
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  var fullWidth = textWidths.reduce(reducer);
    var newSVG = `<svg style="background-color:transparent" width="${fullWidth}" height="${fullHeight}">`;
   for(var i=0; i< pathsArr.length; i++){
     newSVG += pathsArr[i];
