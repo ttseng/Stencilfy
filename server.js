@@ -52,7 +52,7 @@ app.get('/', function(request, response) {
 //////////
 app.post('/', function(req, res){
   console.log('post request received with input: ' + req.body.text);  
-  input = req.body.text;
+  var input = req.body.text;
   textWidths = [];
   var inputChars = input.split('');
   console.log(`inputChars: ${inputChars}`);
@@ -133,8 +133,8 @@ function getSVGinfo(input){
   return info;  
 }
 
-// removeCounters(svgPath)
-// takes an SVG Path and returns an SVG Path that has been stenciled
+// removeCounters(svgPath, char)
+// takes an SVG Path and character and returns an SVG Path that has been stenciled
 function removeCounters(svgPath, char) {
   console.log("removeCounters");
   var maskDim = 5;
@@ -194,17 +194,6 @@ function compileSVGfromPaths(pathsArr){
   return newSVG;
 }
 
-// createSVGfromSolution
-// creates a new SVG element from the clipper.js solution path
-function createSVGfromSolution(solution_paths){
-  var svgInfo = getSVGinfo(input);
-  console.log('svgInfo: ' + svgInfo);
-  var newSVG = `<svg style="background-color:transparent" width="${svgInfo.width}" height="${svgInfo.height}">`;
-  newSVG += '<path stroke="black" fill="none" stroke-width="1" d="' + paths2string(solution_paths, scale) + '"/>';
-  newSVG += '</svg>';  
-  return newSVG;
-}
-
 // path2strings
 // takes paths from clipper.js and converts them to svg paths
 function paths2string (paths, scale) {
@@ -218,7 +207,7 @@ function paths2string (paths, scale) {
     }
     svgpath += "Z";
   }
-  if (svgpath=="") svgpath = "M0,0";
+  // if (svgpath=="") svgpath = "M0,0";
   return svgpath;
 }
 
