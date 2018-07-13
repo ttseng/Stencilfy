@@ -10,7 +10,6 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "animejs": "^2.2.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "requirejs": "^2.3.5",

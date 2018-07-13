@@ -1,5 +1,4 @@
 dependencies:
-  animejs: 2.2.0
   body-parser: 1.18.3
   clipper-lib: 6.2.1
   express: 4.16.3
@@ -18,10 +17,6 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-63d99gEXI6OxTopywIBcjoZ0a9I=
-  /animejs/2.2.0:
-    dev: false
-    resolution:
-      integrity: sha1-Ne79/FNbgZScnLBvCz5gwC5v3IA=
   /array-flatten/1.1.1:
     dev: false
     resolution:
@@ -493,7 +488,6 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 8
 shrinkwrapVersion: 3
 specifiers:
-  animejs: ^2.2.0
   body-parser: ^1.18.3
   clipper-lib: ^6.2.1
   express: ^4.16.3
