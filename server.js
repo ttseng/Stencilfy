@@ -11,7 +11,7 @@ const bodyParser = require("body-parser");
 var svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
 var textToSVG; 
 var svgpath = require('svgpath'); 
-var clipper = require('clipper-lib');
+var ClipperLib = require('clipper-lib');
 
 var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9";
 var counters = counterStrings.split(",");
@@ -152,6 +152,7 @@ function paths2string (paths, scale) {
 // createPath 
 // create polygon path from an SVG path to use with clipper.js
 function createPath(svgPath){
+  console.log('createPath svgPath: ' + svgPath);
   var paths = new ClipperLib.Paths();
   var path = new ClipperLib.Path();
   
