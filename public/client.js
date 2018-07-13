@@ -53,16 +53,18 @@ function booleanCounter(svg){
   // create clipping path
   var svgWidth = svg.attr('width');
   var svgHeight = svg.attr('height');
+  console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   var maskDim = 10;
   var clipPaths = new ClipperLib.Paths();
   var clipPath = new ClipperLib.Path();
   clipPath.push(
     new ClipperLib.IntPoint((svgWidth-maskDim)/2,0),
     new ClipperLib.IntPoint((svgWidth+maskDim)/2,0),
-    new ClipperLib.IntPoint((svg+maskDim)/2, svgHeight),
-    new ClipperLib.IntPoint((svg-maskDim)/2, svgHeight)
+    new ClipperLib.IntPoint((svgWidth+maskDim)/2, svgHeight),
+    new ClipperLib.IntPoint((svgWidth-maskDim)/2, svgHeight)
   );
   clipPaths.push(clipPath);
+  console.log('clipPaths: ', clipPaths);
   
   var scale = 100;
   ClipperLib.JS.ScaleUpPaths(subjPaths, scale);
@@ -85,7 +87,7 @@ function booleanCounter(svg){
   console.log(JSON.stringify(solutionPath));
   
   // add to page
-  svg = '<svg style="margin-top:10px; margin-right:10px;margin-bottom:10px;background-color:#dddddd" width="160" height="160">';
+  svg = `<svg style="margin-top:10px; margin-right:10px;margin-bottom:10px;background-color:#dddddd" width="${svgWidth}" height="${svgHeight}">`;
     svg += '<path stroke="black" fill="yellow" stroke-width="2" d="' + paths2string(solutionPath, scale) + '"/>';
     svg += '</svg>';
   
