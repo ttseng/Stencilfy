@@ -59,18 +59,29 @@ function booleanCounter(svg){
   var clipXstart = (svgWidth-maskDim)/2;
   var clipXend = (svgWidth+maskDim)/2;
   
+  // var clipPaths = new ClipperLib.Paths();
+  // var clipPath = new ClipperLib.Path();
+  // clipPath.push(
+  //   new ClipperLib.IntPoint(clipXstart,0),
+  //   new ClipperLib.IntPoint(clipXend,0),
+  //   new ClipperLib.IntPoint(clipXend, svgHeight),
+  //   new ClipperLib.IntPoint(clipXstart, svgHeight)
+  // );
+  // clipPaths.push(clipPath);
+  // console.log('clipPaths: ', clipPaths);
+  
   var clipPaths = new ClipperLib.Paths();
   var clipPath = new ClipperLib.Path();
   clipPath.push(
-    new ClipperLib.IntPoint(clipXstart,0),
-    new ClipperLib.IntPoint(clipXend,0),
-    new ClipperLib.IntPoint(clipXend, svgHeight),
-    new ClipperLib.IntPoint(clipXstart, svgHeight)
+    new ClipperLib.IntPoint(0,svgHeight/2-maskDim/4),
+    new ClipperLib.IntPoint(0,svgHeight/2+maskDim/4),
+    new ClipperLib.IntPoint(svgWidth, svgHeight/2+maskDim/4),
+    new ClipperLib.IntPoint(svgWidth, svgHeight/2-maskDim/4)
   );
   clipPaths.push(clipPath);
   console.log('clipPaths: ', clipPaths);
   
-    // var clipPaths = [[{X:10,Y:0},{X:20,Y:0},{X:20,Y:100},{X:20,Y:0}]];
+    // var clipPaths = [[{X:0,Y:0},{X:0,Y:0},{X:0,Y:0},{X:0,Y:0}]];
   
   // create clipper
   var cpr = new ClipperLib.Clipper();
@@ -80,7 +91,7 @@ function booleanCounter(svg){
   // create solutions path
   var solutionPath = new ClipperLib.Paths();
   
-  var clipType = ClipperLib.ClipType.ctUnion;
+  var clipType = ClipperLib.ClipType.ctDifference;
   var subjFillType = ClipperLib.PolyFillType.pftNonZero;
   var clipFillType = ClipperLib.PolyFillType.pftNonZero;
   
@@ -137,12 +148,12 @@ function draw() {
                       [{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]]; 
   
   
-  // var clip_paths = [[{X:50,Y:50},{X:150,Y:50},{X:150,Y:150},{X:50,Y:150}],
-  //                     [{X:60,Y:60},{X:60,Y:140},{X:140,Y:140},{X:140,Y:60}]];
+  // var clip_paths = [[{X:50,Y:50},{X:150,Y:50},{X:150,Y:150},{X:50,Y:150}], // 
+  //                     [{X:60,Y:60},{X:60,Y:140},{X:140,Y:140},{X:140,Y:60}]];  // THE ORIGINAL
   
   var clipXstart = 70;
   var clipXend = 80;
-  var svgHeight = 150;
+  var svgHeight = 160;
   
   var clip_paths = new ClipperLib.Paths();
   var clip_path = new ClipperLib.Path();
