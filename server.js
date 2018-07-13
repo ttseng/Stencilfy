@@ -78,12 +78,13 @@ app.post('/', function(req, res){
     }
     // console.log(`newSVGpath ${newSVGpath}`);
     newPathArr.push(newSVGpath);
+    console.log('');
   }
   // compile all paths into a single svg
   var origSVG = compileSVGfromPaths(origPathArr);
-  // console.log(`origSVG: ${origSVG}`);
+  console.log(`origSVG: ${origSVG}`);
   var newSVG = compileSVGfromPaths(newPathArr);
-  // console.log(`newSVG: ${newSVG}`);
+  console.log(`newSVG: ${newSVG}`);
   
   // return cleaned svg
   var respBody = {origSVG, newSVG};
@@ -98,8 +99,7 @@ function constructOptions(index){
   if(index == 0){
     var x = 0;
   }else{
-    const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    var x = textWidths.reduce(reducer);
+    var x = getNewX(); // finds the new X position for the latest character
   }
   options["x"] = x;
   console.log('newX: ' + options["x"]);
@@ -119,6 +119,11 @@ function setupSVG(){
     console.log('textToSVG ready!');
   	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
 } 
+
+function getNewX(){
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    return textWidths.reduce(reducer);
+}
 
 // getSVGinfo
 // get SVG width, height, and path data from text 
@@ -173,6 +178,8 @@ function removeCounters(svgPath, char) {
   // console.log('solutionsPath: ' + JSON.stringify(solution_paths));
   
   var newSVGPath = createPathFromSolution(solution_paths);
+  newSVGPath = svgpath(newSVGPath).translate(getNewX, 0);
+  
   return newSVGPath;
 }
 
