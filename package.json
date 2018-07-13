@@ -16,7 +16,6 @@
     "express": "^4.16.3",
     "requirejs": "^2.3.5",
     "svg-path": "^0.2.1",
-    "svg-path-properties": "^0.4.4",
     "svgpath": "^2.2.1",
     "text-to-svg": "^3.1.3"
   },
