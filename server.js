@@ -31,7 +31,7 @@ app.use("/assets", assets);
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
 	// load SVG stuff on page load
-  console.log(`REQUEST: ${request.params}`);
+  console.log(request.body);
 	setupSVG();
   response.sendFile(__dirname + '/views/index.html');  
 });
