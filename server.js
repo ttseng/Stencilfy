@@ -2,27 +2,27 @@
 // where your node app starts
 
 // init project
-var assets = require("./assets");
-var express = require('express');
-var app = express();
-var port = 3000;
+const assets = require("./assets");
+const express = require('express');
+const app = express();
+const port = 3000;
 
 const bodyParser = require("body-parser");
-var svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
-var textToSVG; 
-var svgpath = require('svgpath'); 
-var ClipperLib = require('clipper-lib');
-var pathProperties = require('svg-path-properties');
+const svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
+const textToSVG = require('text-to-svg');
+const svgpath = require('svgpath'); 
+const ClipperLib = require('clipper-lib');
+const pathProperties = require('svg-path-properties');
 
 var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9";
 var counters = counterStrings.split(",");
 
 // font information
 const attributes = {stroke: 'black', fill: 'transparent'};
-const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
+var defaultOptions = {x:0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
 var scale = 100;
-var fullWidth; // keep a running tally of how wide the final SVG should be
-var fullHeight; // keep a running tally of how tall the final SVG should be
+var textWidths = []; // keep track of the width of each character
+var fullHeight; // height of resulting SVG
 
 var input; // input detected from text field
 
@@ -59,11 +59,13 @@ app.post('/', function(req, res){
   var origPathArr = []; // storing individual paths for each character, before removing counters
   var newPathArr = []; // storing individual paths for each character, after removing counters
   
+  fullHeight = textToSVG.getMetrics(inputChars[0], options).height; // for now, restrict to single line
+  
   for(var i=0; i<inputChars.length; i++){
-    var svgPath = textToSVG.getPath(inputChars[i], options); 
+    var newOptions = constructOptions(i);
+    var svgPath = textToSVG.getPath(inputChars[i], newOptions); 
     console.log(`svgPath: ${svgPath}`);
-    fullWidth += textToSVG.getMetrics(inputChars[i], options).width;
-    fullHeight = textToSVG.getMetrics(inputChars[i], options).height; // for now, restrict to single line
+    textWidths.push(textToSVG.getMetrics(inputChars[i], options).width);
     origPathArr.push(svgPath);
   
     // remove counter if necessary - ultimately want to iterate over ever character
@@ -89,6 +91,19 @@ app.post('/', function(req, res){
   res.send(respBody);
 });
 
+// constructOptions(index)
+// create options for generating svg with text-to-svg that moves x position for each character
+function constructOptions(index){
+  var options = {y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
+  if(index == 0){
+    var x = textWidths[index-1];
+  }else{
+    var x = 0;
+  }
+  options[x] = x;
+  return options;
+}
+
 // listen for requests :)
 var listener = app.listen(port, function () {
   // console.log('Your app is listening on port ' + listener.address().port);
@@ -97,7 +112,6 @@ var listener = app.listen(port, function () {
 var exports = module.exports = {};
 
 function setupSVG(){
-	const TextToSVG = require('text-to-svg');
   	textToSVG = TextToSVG.loadSync();
     console.log('textToSVG ready!');
   	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
@@ -107,9 +121,9 @@ function setupSVG(){
 // get SVG width, height, and path data from text 
 function getSVGinfo(input){
   var info = {};
-  var width = textToSVG.getMetrics(input, options).width;
-  var height = textToSVG.getMetrics(input, options).height;
-  var pathD = textToSVG.getD(input, options);
+  var width = textToSVG.getMetrics(input, defaultOptions).width;
+  var height = textToSVG.getMetrics(input, defaultOptions).height;
+  var pathD = textToSVG.getD(input, defaultOptions);
   info["width"] = width;
   info["height"] = height;
   info["pathD"] = pathD;
