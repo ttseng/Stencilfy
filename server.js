@@ -42,6 +42,7 @@ app.use("/assets", assets);
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
 	// load SVG stuff on page load
+  setupSVG();
   console.log(request.body);
   response.sendFile(__dirname + '/views/index.html');  
 });
@@ -51,17 +52,16 @@ app.get('/', function(request, response) {
 // POST - get text input from textfield
 //////////
 app.post('/', function(req, res){
-  console.log('post request received with input: ' + req.body.text);
-  setupSVG();
-  
+  console.log('post request received with input: ' + req.body.text);  
   input = req.body.text;
   var inputChars = input.split('');
+  console.log(`inputChars: ${inputChars}`);
   var origPathArr = []; // storing individual paths for each character, before removing counters
   var newPathArr = []; // storing individual paths for each character, after removing counters
   
-  
-  for(var i=0; i<inputChars; i++){
+  for(var i=0; i<inputChars.length; i++){
     var svgPath = textToSVG.getPath(inputChars[i], options); 
+    console.log(`svgPath: ${svgPath}`);
     fullWidth += textToSVG.getMetrics(inputChars[i], options).width;
     fullHeight = textToSVG.getMetrics(inputChars[i], options).height; // for now, restrict to single line
     origPathArr.push(svgPath);
@@ -72,11 +72,17 @@ app.post('/', function(req, res){
     }else{
       var newSVGpath = svgPath;
     }
-    newPathArr.push(newSVGPath);
+    console.log(`newSVGpath ${newSVGpath}`);
+    newPathArr.push(newSVGpath);
   }
   // compile all paths into a single svg
-  var newSVG = compileSVGfromPaths();
+  var origSVG = compileSVGfromPaths(origPathArr);
+  console.log(`origSVG: ${origSVG}`);
+  var newSVG = compileSVGfromPaths(newPathArr);
+  console.log(`newSVG: ${newSVG}`);
   
+  console.log(`origSVG ${origSVG}`);
+  console.log(`newSVG ${newSVG}`);
   
   // return cleaned svg
   var respBody = {origSVG, newSVG};
@@ -93,6 +99,7 @@ var exports = module.exports = {};
 function setupSVG(){
 	const TextToSVG = require('text-to-svg');
   	textToSVG = TextToSVG.loadSync();
+    console.log('textToSVG ready!');
   	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
 } 
 
@@ -161,11 +168,12 @@ function createPathFromSolution(solution_paths){
 // compileSVGfromPaths(pathsArr)
 // create an svg from a path of arrays
 function compileSVGfromPaths(pathsArr){
+  console.log(`fullWidth ${fullWidth} fullHeight ${fullHeight}`);
    var newSVG = `<svg style="background-color:transparent" width="${fullWidth}" height="${fullHeight}">`;
   for(var i=0; i< pathsArr.length; i++){
-    newSVG += pathsArray[
+    newSVG += pathsArr[i];
   }
-  
+  return newSVG;
 }
 
 // createSVGfromSolution
