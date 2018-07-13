@@ -32,7 +32,7 @@
     <div id="instructions">
       <h1>Stencil-ify</h1>
       <form method="POST" id="NameForm" action="/">
-        <input name="name" type="text" placeholder="Your text">
+        <input name="text" type="text" placeholder="Your text">
         <button type="submit" class="stencilBtn">Remove Counters</button>
       </form>
     </div>
@@ -61,17 +61,29 @@
     <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
     <script src="https://button.glitch.me/button.js"></script>
     
-    <script>
-    // show the input field item on page
-    var input = document.querySelector('input[name="name"]');
-    input.addEventListener('keyup', updateText());
-
-    function updateText() {
-      return function() {
-        var newText = this.value;
-        // submit form here
-      }				
-    }
+    <script>    
+      
+   $(function(){
+     $('stencilBtn').click(function(e){
+       e.preventDefault();
+       console.log('stencil button clicked');
+       
+       var data = {};
+       data.text = $('input[name="text"]').val();
+       
+       $.ajax({
+         type: 'POST',
+         data: JSON.stringify(data),
+         contentType: 'application/json',
+         url: '/',
+         success: function(data){
+           console.log('success');
+           console.log(JSON.stringify(data));
+         }
+       });
+       
+     });
+   });
       
     </script>
   </body>

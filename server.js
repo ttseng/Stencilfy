@@ -37,11 +37,12 @@ app.get('/', function(request, response) {
 });
 
 app.post('/', function(req, res){
-	console.log(`REQUEST: ${req.body}`);
-	var svg = createSVG(req.body.name);
-  // res.send(svg);
-  res.append('svg', svg);
-	res.redirect('..?svg=' + svg);
+  console.log('post request received');
+	var svg = createSVG(req.body.text);
+  res.json
+  res.append(svg);
+  // res.append('svg', svg);
+	// res.redirect('..?svg=' + svg);
 });
 
 // listen for requests :)
