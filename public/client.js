@@ -53,7 +53,7 @@ function booleanCounter(svg){
   // create clipping path
   var svgWidth = parseInt(svg.attr('width'));
   var svgHeight = parseInt(svg.attr('height'));
-  // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
+  console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   var maskDim = 10;
   
   var clipXstart = (svgWidth-maskDim)/2;
@@ -70,6 +70,8 @@ function booleanCounter(svg){
   clipPaths.push(clipPath);
   console.log('clipPaths: ', clipPaths);
   
+    // var clipPaths = [[{X:10,Y:0},{X:20,Y:0},{X:20,Y:100},{X:20,Y:0}]];
+  
   // create clipper
   var cpr = new ClipperLib.Clipper();
   cpr.AddPaths(subjPaths, ClipperLib.PolyType.ptSubject, true);
@@ -78,7 +80,7 @@ function booleanCounter(svg){
   // create solutions path
   var solutionPath = new ClipperLib.Paths();
   
-  var clipType = ClipperLib.ClipType.ctDifference;
+  var clipType = ClipperLib.ClipType.ctUnion;
   var subjFillType = ClipperLib.PolyFillType.pftNonZero;
   var clipFillType = ClipperLib.PolyFillType.pftNonZero;
   
