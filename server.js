@@ -45,22 +45,19 @@ app.post('/', function(req, res){
   console.log('post request received with input: ' + req.body.text);
   setupSVG();
   var character = req.body.text;
-	var svgPath = createSVG(character); // create svg of character
+	var svgPath = createSVGPath(character); // create svg of character
   
   // remove counter if necessary
   if(counters.includes(character)){
-    var newSvg = removeCounters(svgPath, character); // remove counters if necessary
+    var newSVG = removeCounters(svgPath, character); // remove counters if necessary
   }else{
     var newSVG = createSVGfromSolution(svgPath);
   }
   
-  console.log('svgPath: ' + svgPath);
-  
-  var svg = 
-  console.log('newSvg: ' + svg);
+  console.log('newSvg: ' + newSVG);
   
   // return cleaned svg
-  res.send(svg);
+  res.send(newSVG);
 });
 
 // listen for requests :)
@@ -76,9 +73,9 @@ function setupSVG(){
   	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
 } 
 
-// createSVG
+// createSVGPath
 // takes text (string) input and outputs SVG path
-function createSVG(text){  
+function createSVGPath(text){  
   var svg = textToSVG.getSVG(text, options); // string of svg
     
   var path = textToSVG.getPath(text, options); 
@@ -87,17 +84,16 @@ function createSVG(text){
   return path;
 }
 
-
 // removeCounters(svg)
 // takes an SVG object and returns an edited SVG that has been stenciled
 function removeCounters(svgPath, character) {
   console.log("removeCounters");
   var maskDim = 5;
-  var svgWidth = textToSVG.getMetrics(character).width;
-  var svgHeight = textToSVG.getMetrics(character).height;
+  var svgWidth = textToSVG.getMetrics(character, options).width;
+  var svgHeight = textToSVG.getMetrics(character, options).height;
   var svgPathD = textToSVG.getD(character, options);
   
-  // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
+  console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
   var subj_paths = createPath(svgPathD);
 
@@ -131,13 +127,14 @@ function removeCounters(svgPath, character) {
   console.log('solutionsPath: ' + JSON.stringify(solution_paths));
   
   var newSVG = createSVGfromSolution(solution_paths, scale, svgWidth, svgHeight);
+  console.log('newSVG: ' + newSVG);
   return newSVG;
 }
 
 // createSVGfromSolution
 // creates a new SVG element from the clipper.js solution path
 function createSVGfromSolution(solution_paths, scale, width, height){
-  var newSVG = `<svg style="background-color:none" width="${width}" height="${height}">`;
+  var newSVG = `<svg style="background-color:transparent" width="${width}" height="${height}">`;
   newSVG += '<path stroke="black" fill="none" stroke-width="1" d="' + paths2string(solution_paths, scale) + '"/>';
   newSVG += '</svg>';  
   return newSVG;
