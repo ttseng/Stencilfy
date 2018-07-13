@@ -21,6 +21,8 @@ var counters = counterStrings.split(",");
 const attributes = {stroke: 'black', fill: 'transparent'};
 const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
 var scale = 100;
+var fullWidth; // keep a running tally of how wide the final SVG should be
+var fullHeight; // keep a running tally of how tall the final SVG should be
 
 var input; // input detected from text field
 
@@ -59,19 +61,22 @@ app.post('/', function(req, res){
   
   
   for(var i=0; i<inputChars; i++){
-    var svgPath = textToSVG.getPath(input, options); 
-    var origSVG = textToSVG.getSVG(input, options);
+    var svgPath = textToSVG.getPath(inputChars[i], options); 
+    fullWidth += textToSVG.getMetrics(inputChars[i], options).width;
+    fullHeight = textToSVG.getMetrics(inputChars[i], options).height; // for now, restrict to single line
+    origPathArr.push(svgPath);
   
     // remove counter if necessary - ultimately want to iterate over ever character
-    if(counters.includes(input)){
-      var newSVG = removeCounters(svgPath, input); // remove counters if necessary
+    if(counters.includes(inputChars[i])){
+      var newSVGpath = removeCounters(svgPath, inputChars[i]); // remove counters if necessary
     }else{
-      var newSVG = createSVGfromSolution(svgPath);
+      var newSVGpath = svgPath;
     }
+    newPathArr.push(newSVGPath);
   }
+  // compile all paths into a single svg
+  var newSVG = compileSVGfromPaths();
   
-  console.log('origSVG: ' + origSVG);
-  console.log('newSvg: ' + newSVG);
   
   // return cleaned svg
   var respBody = {origSVG, newSVG};
@@ -104,8 +109,8 @@ function getSVGinfo(input){
   return info;  
 }
 
-// removeCounters(svg)
-// takes an SVG object and returns an edited SVG that has been stenciled
+// removeCounters(svgPath)
+// takes an SVG Path and returns an SVG Path that has been stenciled
 function removeCounters(svgPath) {
   console.log("removeCounters");
   var maskDim = 5;
@@ -143,9 +148,24 @@ function removeCounters(svgPath) {
   cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
   // console.log('solutionsPath: ' + JSON.stringify(solution_paths));
   
-  var newSVG = createSVGfromSolution(solution_paths);
-  // console.log('newSVG: ' + newSVG);
-  return newSVG;
+  var newSVGPath = createPathFromSolution(solution_paths);
+  return newSVGPath;
+}
+
+// createPathFromSolution(solution_paths)
+// creates SVG path for clipper.js solution path
+function createPathFromSolution(solution_paths){
+  return '<path stroke="black" fill="none" stroke-width="1" d="' + paths2string(solution_paths, scale) + '"/>';
+}
+
+// compileSVGfromPaths(pathsArr)
+// create an svg from a path of arrays
+function compileSVGfromPaths(pathsArr){
+   var newSVG = `<svg style="background-color:transparent" width="${fullWidth}" height="${fullHeight}">`;
+  for(var i=0; i< pathsArr.length; i++){
+    newSVG += pathsArray[
+  }
+  
 }
 
 // createSVGfromSolution
