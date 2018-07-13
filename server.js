@@ -9,7 +9,8 @@ const port = 3000;
 
 const bodyParser = require("body-parser");
 const svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
-var textToSVG = require('text-to-svg');
+const TextToSVG = require('text-to-svg');
+var textToSVG;
 const svgpath = require('svgpath'); 
 const ClipperLib = require('clipper-lib');
 const pathProperties = require('svg-path-properties');
@@ -21,10 +22,8 @@ var counters = counterStrings.split(",");
 const attributes = {stroke: 'black', fill: 'transparent'};
 var defaultOptions = {x:0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
 var scale = 100;
-var textWidths = []; // keep track of the width of each character
+var textWidths;; // keep track of the width of each character
 var fullHeight; // height of resulting SVG
-
-var input; // input detected from text field
 
 //https://www.npmjs.com/package/svgpath
 
@@ -54,6 +53,7 @@ app.get('/', function(request, response) {
 app.post('/', function(req, res){
   console.log('post request received with input: ' + req.body.text);  
   input = req.body.text;
+  textWidths = [];
   var inputChars = input.split('');
   console.log(`inputChars: ${inputChars}`);
   var origPathArr = []; // storing individual paths for each character, before removing counters
@@ -66,7 +66,7 @@ app.post('/', function(req, res){
     var svgPath = textToSVG.getPath(inputChars[i], newOptions); 
     // console.log(`svgPath: ${svgPath}`);
     var charWidth = textToSVG.getMetrics(inputChars[i], defaultOptions).width;
-    console.log('characterWidth: ' + characterWidth);
+    console.log('charWidth: ' + charWidth);
     textWidths.push(charWidth);
     origPathArr.push(svgPath);
   
@@ -93,14 +93,16 @@ app.post('/', function(req, res){
 // constructOptions(index)
 // create options for generating svg with text-to-svg that moves x position for each character
 function constructOptions(index){
+  console.log(`constructOptions with index ${index}`);
   var options = {y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
   if(index == 0){
-    var x = textWidths[index-1];
-  }else{
     var x = 0;
+  }else{
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    var x = textWidths.reduce(reducer);
   }
-  options[x] = x;
-  console.log('newX: ' + options[x]);
+  options["x"] = x;
+  console.log('newX: ' + options["x"]);
   console.log(`textWidths ${textWidths}`);
   return options;
 }
@@ -113,7 +115,7 @@ var listener = app.listen(port, function () {
 var exports = module.exports = {};
 
 function setupSVG(){
-  	textToSVG = textToSVG.loadSync();
+  	textToSVG = TextToSVG.loadSync();
     console.log('textToSVG ready!');
   	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
 } 
@@ -133,10 +135,10 @@ function getSVGinfo(input){
 
 // removeCounters(svgPath)
 // takes an SVG Path and returns an SVG Path that has been stenciled
-function removeCounters(svgPath) {
+function removeCounters(svgPath, char) {
   console.log("removeCounters");
   var maskDim = 5;
-  var svgInfo = getSVGinfo(input);
+  var svgInfo = getSVGinfo(char);
   
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
