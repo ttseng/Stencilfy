@@ -31,21 +31,22 @@ app.use("/assets", assets);
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
 	// load SVG stuff on page load
-  console.log(request);
+  console.log(`REQUEST: ${request.params}`);
 	setupSVG();
   response.sendFile(__dirname + '/views/index.html');  
 });
 
 app.post('/', function(req, res){
-	console.log(req.body);
+	console.log(`REQUEST: ${req.body}`);
 	var svg = createSVG(req.body.name);
   // res.send(svg);
+  res.append('svg', svg);
 	res.redirect('..?svg=' + svg);
 });
 
 // listen for requests :)
 var listener = app.listen(port, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+  // console.log('Your app is listening on port ' + listener.address().port);
 });
 
 var exports = module.exports = {};
@@ -64,7 +65,7 @@ function createSVG(text){
   // console.log('svg: ' + svg);
   
   var path = textToSVG.getPath(text, options); 
-  console.log('path: ' + path);
+  // console.log('path: ' + path);
   
   var pathD = textToSVG.getD(text, options); // path data from path
   // console.log('pathD: ' + pathD);
