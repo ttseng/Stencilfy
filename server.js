@@ -180,10 +180,11 @@ function removeCounters(svgPath, char) {
   var newSVGPathD = paths2string(solution_paths, scale);  
   console.log('newSVGPathD ' + newSVGPathD);
   
-  var transformed = svgpath(newSVGPathD).translate(getNewX(), 0);
+  var transformed = svgpath(newSVGPathD).translate(getNewX()-textWidths[textWidths.length-1], 0);
   // console.log('transformed ' + transformed);
   
-  var newSVGPath = createPathFromSolution(transformed);
+  var newSVGPath = '<path stroke="black" fill="none" stroke-width="1" d="' + transformed + '"/>';
+  
   console.log(`newSVGPath: ${newSVGPath}`);
   // newSVGPath = svgpath(newSVGPath).translate(getNewX, 0);
   
