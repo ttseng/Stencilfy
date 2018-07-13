@@ -22,7 +22,7 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-// removeCounters - an attempt using masks
+// removeCounters - an attempt using svg masks
 function removeCounters(svg){
   var defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
   var mask = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
@@ -48,26 +48,21 @@ function removeCounters(svg){
 // booleanCounter - test the clipper.js library
 function booleanCounter(svg){
   // add original svg path
-      // var subjPaths = [[{X:10,Y:10},{X:110,Y:10},{X:110,Y:110},{X:10,Y:110}],[{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]]; 
-
   var subjPaths = createPath($('svg'));
-   
-  // var path = svg.find('path').attr('d');
-  // subjPath.push(path);  
   
   // create clipping path
-  
-    var clipPaths = [[{X:50,Y:50},{X:150,Y:50},{X:150,Y:150},{X:50,Y:150}], [{X:60,Y:60},{X:60,Y:140},{X:140,Y:140},{X:140,Y:60}]];
-  var maskDim = 10;
   var svgWidth = svg.attr('width');
   var svgHeight = svg.attr('height');
-
-    // clipPath.push(
-  //   new ClipperLib.IntPoint(svgWidth-maskDim/2,0),
-  //   new ClipperLib.IntPoint(svgWidth+maskDim/2,0),
-  //   new ClipperLib.IntPoint(svg+maskDim/2, svgHeight),
-  //   new ClipperLib.IntPoint(svg-maskDim/2, svgHeight)
-  //   );
+  var maskDim = 10;
+  var clipPaths = new ClipperLib.Paths();
+  var clipPath = new ClipperLib.Path();
+  clipPath.push(
+    new ClipperLib.IntPoint((svgWidth-maskDim)/2,0),
+    new ClipperLib.IntPoint((svgWidth+maskDim)/2,0),
+    new ClipperLib.IntPoint((svg+maskDim)/2, svgHeight),
+    new ClipperLib.IntPoint((svg-maskDim)/2, svgHeight)
+  );
+  clipPaths.push(clipPath);
   
   var scale = 100;
   ClipperLib.JS.ScaleUpPaths(subjPaths, scale);
