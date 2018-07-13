@@ -53,15 +53,21 @@ app.post('/', function(req, res){
   setupSVG();
   
   input = req.body.text;
+  var inputChars = input.split('');
+  var origPathArr = []; // storing individual paths for each character, before removing counters
+  var newPathArr = []; // storing individual paths for each character, after removing counters
   
-	var svgPath = textToSVG.getPath(input, options); 
-  var origSVG = textToSVG.getSVG(input, options);
   
-  // remove counter if necessary - ultimately want to iterate over ever character
-  if(counters.includes(input)){
-    var newSVG = removeCounters(svgPath, input); // remove counters if necessary
-  }else{
-    var newSVG = createSVGfromSolution(svgPath);
+  for(var i=0; i<inputChars; i++){
+    var svgPath = textToSVG.getPath(input, options); 
+    var origSVG = textToSVG.getSVG(input, options);
+  
+    // remove counter if necessary - ultimately want to iterate over ever character
+    if(counters.includes(input)){
+      var newSVG = removeCounters(svgPath, input); // remove counters if necessary
+    }else{
+      var newSVG = createSVGfromSolution(svgPath);
+    }
   }
   
   console.log('origSVG: ' + origSVG);
