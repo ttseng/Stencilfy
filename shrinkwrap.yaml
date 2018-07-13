@@ -5,6 +5,7 @@ dependencies:
   express: 4.16.3
   requirejs: 2.3.5
   svg-path: 0.2.1
+  svg-path-properties: 0.4.4
   svg.js: 2.6.5
   svgpath: 2.2.1
   text-to-svg: 3.1.3
@@ -436,6 +437,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-E0Vxi+EHZboHguwY5SlJk74jpNE=
+  /svg-path-properties/0.4.4:
+    dev: false
+    resolution:
+      integrity: sha1-+VS4ET0EQ7EryArjfv/PX/VF1XA=
   /svg-path/0.2.1:
     dependencies:
       svg-numbers: 0.1.1
@@ -499,6 +504,7 @@ specifiers:
   express: ^4.16.3
   requirejs: ^2.3.5
   svg-path: ^0.2.1
+  svg-path-properties: ^0.4.4
   svg.js: ^2.6.5
   svgpath: ^2.2.1
   text-to-svg: ^3.1.3
