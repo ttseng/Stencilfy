@@ -37,15 +37,17 @@ function removeCounters(svg) {
   cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
   console.log(JSON.stringify(solution_paths));
   
-  var newSVG = `<svg style="margin-top:10px; margin-right:10px;margin-bottom:10px;background-color:#dddddd" width="${svgWidth}" height="${svgHeight}">`;
-  newSVG += '<path stroke="black" fill="yellow" stroke-width="2" d="' + paths2string(solution_paths, scale) + '"/>';
-  newSVG += '</svg>';
-  $('body').append(newSVG);
+  var newSVG = createSVGfromSolution(solution_paths, scale, svgWidth, svgHeight);
+  return newSVG;
 }
 
 // createSVGfromSolution
-// creates a new SVG element from the clipper.js solution
-function createSVGfromSolution(solution){
+// creates a new SVG element from the clipper.js solution path
+function createSVGfromSolution(solution_paths, scale, width, height){
+  var newSVG = `<svg style="background-color:none" width="${width}" height="${height}">`;
+  newSVG += '<path stroke="black" fill="none" stroke-width="1" d="' + paths2string(solution_paths, scale) + '"/>';
+  newSVG += '</svg>';  
+  return newSVG;
 }
 
 

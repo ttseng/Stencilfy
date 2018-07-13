@@ -11,6 +11,11 @@ function addSVGtoPage(){
   }
 }
 
+function addStencilSVGtoPage(){
+  // show stencil-ified text
+    $('#textSVGstencil').append(removeCounters($('svg')));
+}
+
 // getParameterByName - take the parameter from the url and fetch contents
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
