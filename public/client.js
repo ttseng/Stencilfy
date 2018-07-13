@@ -1,6 +1,9 @@
-function addSVGtoPage(svg){
-  $('#textSVG').html(svg);
+function addSVGtoPage(origSVG, newSVG){
+  $('#textSVG').html(origSVG);
+  $('#textSVGstencil').html(newSVG);
 }
+
+
 
 // getParameterByName - take the parameter from the url and fetch contents
 function getParameterByName(name, url) {

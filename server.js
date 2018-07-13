@@ -46,6 +46,7 @@ app.post('/', function(req, res){
   setupSVG();
   var character = req.body.text;
 	var svgPath = createSVGPath(character); // create svg of character
+  var origSVG = createSVGfromSolution(svgPath);
   
   // remove counter if necessary
   if(counters.includes(character)){
@@ -54,10 +55,12 @@ app.post('/', function(req, res){
     var newSVG = createSVGfromSolution(svgPath);
   }
   
+  console.log('origSVG: ' + origSVG);
   console.log('newSvg: ' + newSVG);
   
   // return cleaned svg
-  res.send(newSVG);
+  var respBody = {origSVG, newSVG};
+  res.send(respBody);
 });
 
 // listen for requests :)
@@ -84,16 +87,27 @@ function createSVGPath(text){
   return path;
 }
 
+// getSVGinfo
+// get SVG width, height, and path data from text 
+function getSVGinfo(text){
+  var info = {};
+  var svgWidth = textToSVG.getMetrics(character, options).width;
+  var svgHeight = textToSVG.getMetrics(character, options).height;
+  var svgPathD = textToSVG.getD(character, options);
+  info["svgWidth"] = svgWidth;
+  info["svgHeight"] = svgHeight;
+  info["svgH"] = svgHeight;
+  
+  
+}
+
 // removeCounters(svg)
 // takes an SVG object and returns an edited SVG that has been stenciled
 function removeCounters(svgPath, character) {
   console.log("removeCounters");
   var maskDim = 5;
-  var svgWidth = textToSVG.getMetrics(character, options).width;
-  var svgHeight = textToSVG.getMetrics(character, options).height;
-  var svgPathD = textToSVG.getD(character, options);
   
-  console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
+  // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
   var subj_paths = createPath(svgPathD);
 
@@ -124,10 +138,10 @@ function removeCounters(svgPath, character) {
   // perform boolean
   var solution_paths = new ClipperLib.Paths();
   cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
-  console.log('solutionsPath: ' + JSON.stringify(solution_paths));
+  // console.log('solutionsPath: ' + JSON.stringify(solution_paths));
   
   var newSVG = createSVGfromSolution(solution_paths, scale, svgWidth, svgHeight);
-  console.log('newSVG: ' + newSVG);
+  // console.log('newSVG: ' + newSVG);
   return newSVG;
 }
 
