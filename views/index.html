@@ -40,15 +40,9 @@
     <!-- Test imported SVG -->
 
     <div id="textSVG">
-      <script type="text/javascript">
-        addSVGtoPage();
-      </script>
     </div>
     
-    <div id="textSVGstencil">
-      <script type="text/javascript">
-        addStencilSVGtoPage();
-      </script>      
+    <div id="textSVGstencil">   
     </div>
     
     
@@ -64,7 +58,7 @@
     <script>    
       
    $(function(){
-     $('stencilBtn').click(function(e){
+     $('.stencilBtn').click(function(e){
        e.preventDefault();
        console.log('stencil button clicked');
        
@@ -78,7 +72,10 @@
          url: '/',
          success: function(data){
            console.log('success');
+           var svg = data;
            console.log(JSON.stringify(data));
+           addSVGtoPage(svg);
+           addStencilSVGtoPage();
          }
        });
        

@@ -39,8 +39,8 @@ app.get('/', function(request, response) {
 app.post('/', function(req, res){
   console.log('post request received');
 	var svg = createSVG(req.body.text);
-  res.json
-  res.append(svg);
+  console.log('svg: ' + svg);
+  res.send(svg);
   // res.append('svg', svg);
 	// res.redirect('..?svg=' + svg);
 });

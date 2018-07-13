@@ -1,19 +1,10 @@
-function addSVGtoPage(){
-  var url = window.location.href;
-  var svgExist = url.indexOf('?svg=');
-  if(svgExist != -1){
-  	// clean up svg to replacd %20 with spaces
-  	var cleanSVG = decodeURI(getParameterByName("svg", url));
-  	// console.log(cleanSVG);
-      $('#textSVG').append(cleanSVG);
-  }else{
-    return false;
-  }
+function addSVGtoPage(svg){
+  $('#textSVG').html(svg);
 }
 
 function addStencilSVGtoPage(){
   // show stencil-ified text
-    $('#textSVGstencil').append(removeCounters($('svg')));
+    $('#textSVGstencil').html(removeCounters($('svg')));
 }
 
 // getParameterByName - take the parameter from the url and fetch contents
