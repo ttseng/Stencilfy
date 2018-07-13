@@ -53,8 +53,8 @@ function booleanCounter(svg){
   // create clipping path
   var svgWidth = parseInt(svg.attr('width'));
   var svgHeight = parseInt(svg.attr('height'));
-  console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   var maskDim = 10;
+  // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
   var clipXstart = (svgWidth-maskDim)/2;
   var clipXend = (svgWidth+maskDim)/2;
@@ -73,15 +73,19 @@ function booleanCounter(svg){
   var clipPaths = new ClipperLib.Paths();
   var clipPath = new ClipperLib.Path();
   clipPath.push(
-    new ClipperLib.IntPoint(0,svgHeight/2-maskDim/4),
-    new ClipperLib.IntPoint(0,svgHeight/2+maskDim/4),
-    new ClipperLib.IntPoint(svgWidth, svgHeight/2+maskDim/4),
-    new ClipperLib.IntPoint(svgWidth, svgHeight/2-maskDim/4)
+    new ClipperLib.IntPoint(0,svgHeight/2-maskDim/3),
+    new ClipperLib.IntPoint(0,svgHeight/2+maskDim/3),
+    new ClipperLib.IntPoint(svgWidth, svgHeight/2+maskDim/3),
+    new ClipperLib.IntPoint(svgWidth, svgHeight/2-maskDim/3)
   );
   clipPaths.push(clipPath);
   console.log('clipPaths: ', clipPaths);
   
     // var clipPaths = [[{X:0,Y:0},{X:0,Y:0},{X:0,Y:0},{X:0,Y:0}]];
+  
+  var scale = 100;
+  ClipperLib.JS.ScaleUpPaths(subjPaths, scale);
+  ClipperLib.JS.ScaleUpPaths(clipPaths, scale);
   
   // create clipper
   var cpr = new ClipperLib.Clipper();
@@ -101,7 +105,7 @@ function booleanCounter(svg){
   
   // add to page
   svg = `<svg style="margin-top:10px; margin-right:10px;margin-bottom:10px;background-color:#dddddd" width="${svgWidth}" height="${svgHeight}">`;
-    svg += '<path stroke="black" fill="yellow" stroke-width="2" d="' + paths2string(solutionPath, 1) + '"/>';
+    svg += '<path stroke="black" fill="yellow" stroke-width="2" d="' + paths2string(solutionPath, scale) + '"/>';
     svg += '</svg>';
   
   $('body').append(svg);
@@ -146,14 +150,60 @@ function createPath(svg){
 function draw() {
   var subj_paths = [[{X:10,Y:10},{X:110,Y:10},{X:110,Y:110},{X:10,Y:110}],
                       [{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]]; 
-  
-  
+    
   // var clip_paths = [[{X:50,Y:50},{X:150,Y:50},{X:150,Y:150},{X:50,Y:150}], // 
   //                     [{X:60,Y:60},{X:60,Y:140},{X:140,Y:140},{X:140,Y:60}]];  // THE ORIGINAL
   
   var clipXstart = 70;
   var clipXend = 80;
   var svgHeight = 160;
+  
+  var clip_paths = new ClipperLib.Paths();
+  var clip_path = new ClipperLib.Path();
+  clip_path.push(
+    new ClipperLib.IntPoint(clipXstart,0),
+    new ClipperLib.IntPoint(clipXend,0),
+    new ClipperLib.IntPoint(clipXend, svgHeight),
+    new ClipperLib.IntPoint(clipXstart, svgHeight)
+  );
+  clip_paths.push(clip_path);
+  
+  var scale = 100;
+  ClipperLib.JS.ScaleUpPaths(subj_paths, scale);
+  ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
+  var cpr = new ClipperLib.Clipper();
+  cpr.AddPaths(subj_paths, ClipperLib.PolyType.ptSubject, true);
+  cpr.AddPaths(clip_paths, ClipperLib.PolyType.ptClip, true);
+  var subject_fillType = ClipperLib.PolyFillType.pftNonZero;
+  var clip_fillType = ClipperLib.PolyFillType.pftNonZero;
+  var clipTypes = [ClipperLib.ClipType.ctUnion, ClipperLib.ClipType.ctDifference, ClipperLib.ClipType.ctXor, ClipperLib.ClipType.ctIntersection];
+  var clipTypesTexts = "Union, Difference, Xor, Intersection";
+  var solution_paths, svg, cont = document.getElementById('svgContainer');
+  var i;
+  for(i = 0; i < clipTypes.length; i++) {
+    solution_paths = new ClipperLib.Paths();
+    cpr.Execute(clipTypes[i], solution_paths, subject_fillType, clip_fillType);
+    console.log(JSON.stringify(solution_paths));
+    svg = '<svg style="margin-top:10px; margin-right:10px;margin-bottom:10px;background-color:#dddddd" width="160" height="160">';
+    svg += '<path stroke="black" fill="yellow" stroke-width="2" d="' + paths2string(solution_paths, scale) + '"/>';
+    svg += '</svg>';
+    cont.innerHTML += svg;
+  }
+  cont.innerHTML += "<br>" + clipTypesTexts;
+}
+
+
+function draw2() {
+  var subj_paths = createPath($('svg'));
+  
+  var svg = $('svg');
+  var svgWidth = parseInt(svg.attr('width'));
+  var svgHeight = parseInt(svg.attr('height'));
+  var maskDim = 10;
+  // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
+  
+  var clipXstart = (svgWidth-maskDim)/2;
+  var clipXend = (svgWidth+maskDim)/2;
   
   var clip_paths = new ClipperLib.Paths();
   var clip_path = new ClipperLib.Path();
