@@ -50,8 +50,6 @@ function createSVGfromSolution(solution_paths, scale, width, height){
   return newSVG;
 }
 
-
-
 // path2strings
 // takes paths from clipper.js and converts them to svg paths
 function paths2string (paths, scale) {
