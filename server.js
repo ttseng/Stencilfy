@@ -20,6 +20,9 @@ var counters = counterStrings.split(",");
 // font information
 const attributes = {stroke: 'black', fill: 'transparent'};
 const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
+var scale = 100;
+
+var input; // input detected from text field
 
 //https://www.npmjs.com/package/svgpath
 
@@ -44,13 +47,13 @@ app.get('/', function(request, response) {
 app.post('/', function(req, res){
   console.log('post request received with input: ' + req.body.text);
   setupSVG();
-  var character = req.body.text;
-	var svgPath = createSVGPath(character); // create svg of character
-  var origSVG = createSVGfromSolution(svgPath);
+  input = req.body.text;
+	var svgPath = textToSVG.getPath(input, options); 
+  var origSVG = textToSVG.getSVG(input, options);
   
-  // remove counter if necessary
-  if(counters.includes(character)){
-    var newSVG = removeCounters(svgPath, character); // remove counters if necessary
+  // remove counter if necessary - ultimately want to iterate over ever character
+  if(counters.includes(input)){
+    var newSVG = removeCounters(svgPath, input); // remove counters if necessary
   }else{
     var newSVG = createSVGfromSolution(svgPath);
   }
@@ -76,56 +79,44 @@ function setupSVG(){
   	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
 } 
 
-// createSVGPath
-// takes text (string) input and outputs SVG path
-function createSVGPath(text){  
-  var svg = textToSVG.getSVG(text, options); // string of svg
-    
-  var path = textToSVG.getPath(text, options); 
-  console.log('path: ' + path);
-    
-  return path;
-}
-
 // getSVGinfo
 // get SVG width, height, and path data from text 
-function getSVGinfo(text){
+function getSVGinfo(input){
   var info = {};
-  var svgWidth = textToSVG.getMetrics(character, options).width;
-  var svgHeight = textToSVG.getMetrics(character, options).height;
-  var svgPathD = textToSVG.getD(character, options);
-  info["svgWidth"] = svgWidth;
-  info["svgHeight"] = svgHeight;
-  info["svgH"] = svgHeight;
-  
-  
+  var width = textToSVG.getMetrics(input, options).width;
+  var height = textToSVG.getMetrics(input, options).height;
+  var pathD = textToSVG.getD(input, options);
+  info["width"] = width;
+  info["height"] = height;
+  info["pathD"] = pathD;
+  return info;  
 }
 
 // removeCounters(svg)
 // takes an SVG object and returns an edited SVG that has been stenciled
-function removeCounters(svgPath, character) {
+function removeCounters(svgPath) {
   console.log("removeCounters");
   var maskDim = 5;
+  var svgInfo = getSVGinfo(input);
   
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
-  var subj_paths = createPath(svgPathD);
+  var subj_paths = createPath(svgInfo.svgPathD);
 
-  var clipXstart = (svgWidth-maskDim)/2;
-  var clipXend = (svgWidth+maskDim)/2;
+  var clipXstart = (svgInfo.width-maskDim)/2;
+  var clipXend = (svgInfo.width+maskDim)/2;
   
   var clip_paths = new ClipperLib.Paths();
   var clip_path = new ClipperLib.Path();
   clip_path.push(
     new ClipperLib.IntPoint(clipXstart,0),
     new ClipperLib.IntPoint(clipXend,0),
-    new ClipperLib.IntPoint(clipXend, svgHeight),
-    new ClipperLib.IntPoint(clipXstart, svgHeight)
+    new ClipperLib.IntPoint(clipXend, svgInfo.svgHeight),
+    new ClipperLib.IntPoint(clipXstart, svgInfo.svgHeight)
   );
   clip_paths.push(clip_path);
   
   // setup stuff
-  var scale = 100;
   ClipperLib.JS.ScaleUpPaths(subj_paths, scale);
   ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
   var cpr = new ClipperLib.Clipper();
@@ -140,15 +131,17 @@ function removeCounters(svgPath, character) {
   cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
   // console.log('solutionsPath: ' + JSON.stringify(solution_paths));
   
-  var newSVG = createSVGfromSolution(solution_paths, scale, svgWidth, svgHeight);
+  var newSVG = createSVGfromSolution(solution_paths);
   // console.log('newSVG: ' + newSVG);
   return newSVG;
 }
 
 // createSVGfromSolution
 // creates a new SVG element from the clipper.js solution path
-function createSVGfromSolution(solution_paths, scale, width, height){
-  var newSVG = `<svg style="background-color:transparent" width="${width}" height="${height}">`;
+function createSVGfromSolution(solution_paths){
+  var svgInfo = JSON.stringify(getSVGinfo(input));
+  console.log('svgInfo: ' + svgInfo);
+  var newSVG = `<svg style="background-color:transparent" width="${svgInfo.svgWidth}" height="${svgInfo.svgHeight}">`;
   newSVG += '<path stroke="black" fill="none" stroke-width="1" d="' + paths2string(solution_paths, scale) + '"/>';
   newSVG += '</svg>';  
   return newSVG;
