@@ -179,9 +179,11 @@ function removeCounters(svgPath, char) {
   
   var newSVGPathD = paths2string(solution_paths, scale);  
   console.log('newSVGPathD ' + newSVGPathD);
-  var transformed = svgpath(newSVGPathD).translate(getNewX, 0);
-  console.log('transformed ' + transformed);
-  var newSVGPath = createPathFromSolution(solution_paths);
+  
+  var transformed = svgpath(newSVGPathD).translate(getNewX(), 0);
+  // console.log('transformed ' + transformed);
+  
+  var newSVGPath = createPathFromSolution(transformed);
   console.log(`newSVGPath: ${newSVGPath}`);
   // newSVGPath = svgpath(newSVGPath).translate(getNewX, 0);
   
