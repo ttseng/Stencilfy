@@ -12,10 +12,14 @@ var svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
 var textToSVG; 
 var svgpath = require('svgpath'); 
 var ClipperLib = require('clipper-lib');
-var svgPathProperties = require('svg-path-properties');
+var pathProperties = require('svg-path-properties');
 
 var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9";
 var counters = counterStrings.split(",");
+
+// font information
+const attributes = {stroke: 'black', fill: 'transparent'};
+const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
 
 //https://www.npmjs.com/package/svgpath
 
@@ -34,23 +38,26 @@ app.use("/assets", assets);
 app.get('/', function(request, response) {
 	// load SVG stuff on page load
   console.log(request.body);
-	setupSVG();
   response.sendFile(__dirname + '/views/index.html');  
 });
 
 app.post('/', function(req, res){
-  console.log('post request received');
+  console.log('post request received with input: ' + req.body.text);
+  setupSVG();
   var character = req.body.text;
-	var svgPath = createSVG(character);
-  var svgWidth = textToSVG.getMetrics(character).width;
-  var svgHeight = textToSVG.getMetrics(character).height;
+	var svgPath = createSVG(character); // create svg of character
   
   // remove counter if necessary
   if(counters.includes(character)){
-    svgPath = removeCounters(svgPath);
+    var newSvg = removeCounters(svgPath, character); // remove counters if necessary
+  }else{
+    var newSVG = createSVGfromSolution(svgPath);
   }
   
-  var svg = createSVGfromSolution(svgPath, svgWidth, svgHeight);
+  console.log('svgPath: ' + svgPath);
+  
+  var svg = 
+  console.log('newSvg: ' + svg);
   
   // return cleaned svg
   res.send(svg);
@@ -71,9 +78,7 @@ function setupSVG(){
 
 // createSVG
 // takes text (string) input and outputs SVG path
-function createSVG(text){
-  const attributes = {stroke: 'black', fill: 'transparent'};  
-  const options = {x: 0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
+function createSVG(text){  
   var svg = textToSVG.getSVG(text, options); // string of svg
     
   var path = textToSVG.getPath(text, options); 
@@ -85,11 +90,16 @@ function createSVG(text){
 
 // removeCounters(svg)
 // takes an SVG object and returns an edited SVG that has been stenciled
-function removeCounters(svgPath, svgWidth, svgHeight) {
+function removeCounters(svgPath, character) {
+  console.log("removeCounters");
   var maskDim = 5;
+  var svgWidth = textToSVG.getMetrics(character).width;
+  var svgHeight = textToSVG.getMetrics(character).height;
+  var svgPathD = textToSVG.getD(character, options);
+  
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
-  var subj_paths = createPath(svgPath);
+  var subj_paths = createPath(svgPathD);
 
   var clipXstart = (svgWidth-maskDim)/2;
   var clipXend = (svgWidth+maskDim)/2;
@@ -118,7 +128,7 @@ function removeCounters(svgPath, svgWidth, svgHeight) {
   // perform boolean
   var solution_paths = new ClipperLib.Paths();
   cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
-  console.log(JSON.stringify(solution_paths));
+  console.log('solutionsPath: ' + JSON.stringify(solution_paths));
   
   var newSVG = createSVGfromSolution(solution_paths, scale, svgWidth, svgHeight);
   return newSVG;
@@ -152,17 +162,15 @@ function paths2string (paths, scale) {
 
 // createPath 
 // create polygon path from an SVG path to use with clipper.js
-function createPath(svgPath){
-  console.log('createPath svgPath: ' + svgPath);
+function createPath(svgPathD){
   var paths = new ClipperLib.Paths();
   var path = new ClipperLib.Path();
-
-  console.log('svgPathElem: ' + svgPathElem);
   
-  var len = svgPathElem.getTotalLength();
+  var properties = pathProperties.svgPathProperties(svgPathD);
+  var len = properties.getTotalLength();
   
   for(var i=0; i<len; i++){
-    var p = svgPathElem.getPointAtLength(i);
+    var p = properties.getPointAtLength(i);
     path.push(new ClipperLib.IntPoint(p.x, p.y));
   }
   
