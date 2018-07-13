@@ -12,6 +12,7 @@ var svgPath = require('svg-path'); //https://github.com/PPvG/svg-path
 var textToSVG; 
 var svgpath = require('svgpath'); 
 var ClipperLib = require('clipper-lib');
+var svgPathProperties = require('svg-path-properties');
 
 var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9";
 var counters = counterStrings.split(",");
@@ -155,11 +156,13 @@ function createPath(svgPath){
   console.log('createPath svgPath: ' + svgPath);
   var paths = new ClipperLib.Paths();
   var path = new ClipperLib.Path();
+
+  console.log('svgPathElem: ' + svgPathElem);
   
-  var len = svgPath.getTotalLength();
+  var len = svgPathElem.getTotalLength();
   
   for(var i=0; i<len; i++){
-    var p = svgPath.getPointAtLength(i);
+    var p = svgPathElem.getPointAtLength(i);
     path.push(new ClipperLib.IntPoint(p.x, p.y));
   }
   
