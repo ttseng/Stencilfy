@@ -13,7 +13,7 @@ var textToSVG;
 var svgpath = require('svgpath'); 
 var clipper = require('clipper-lib');
 
-var counterStrings = " A, B, D, O, P, Q, R, a, b, d, e, g, o, p, q, 0, 4, 6, 8, 9";
+var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9";
 var counters = counterStrings.split(",");
 
 //https://www.npmjs.com/package/svgpath
@@ -39,16 +39,20 @@ app.get('/', function(request, response) {
 
 app.post('/', function(req, res){
   console.log('post request received');
-	var svgPath = createSVG(req.body.text);
-  var svgWidth = textToSVG.getMetrics(req.body.text).width;
-  var svgHeight = textToSVG.getMetrics(req.body.text).height;
+  var character = req.body.text;
+	var svgPath = createSVG(character);
+  var svgWidth = textToSVG.getMetrics(character).width;
+  var svgHeight = textToSVG.getMetrics(character).height;
   
   // remove counter if necessary
+  if(counters.includes(character)){
+    svgPath = removeCounters(svgPath);
+  }
+  
+  var svg = createSVGfromSolution(svgPath, svgWidth, svgHeight);
   
   // return cleaned svg
   res.send(svg);
-  // res.append('svg', svg);
-	// res.redirect('..?svg=' + svg);
 });
 
 // listen for requests :)
@@ -80,13 +84,11 @@ function createSVG(text){
 
 // removeCounters(svg)
 // takes an SVG object and returns an edited SVG that has been stenciled
-function removeCounters(svg) {
-  var svgWidth = parseInt(svg.attr('width'));
-  var svgHeight = parseInt(svg.attr('height'));
+function removeCounters(svgPath, svgWidth, svgHeight) {
   var maskDim = 5;
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
-  var subj_paths = createPath($('svg'));
+  var subj_paths = createPath(svgPath);
 
   var clipXstart = (svgWidth-maskDim)/2;
   var clipXend = (svgWidth+maskDim)/2;
@@ -115,7 +117,7 @@ function removeCounters(svg) {
   // perform boolean
   var solution_paths = new ClipperLib.Paths();
   cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
-  // console.log(JSON.stringify(solution_paths));
+  console.log(JSON.stringify(solution_paths));
   
   var newSVG = createSVGfromSolution(solution_paths, scale, svgWidth, svgHeight);
   return newSVG;
@@ -148,16 +150,15 @@ function paths2string (paths, scale) {
 }
 
 // createPath 
-// create polygon path from an SVG to use with clipper.js
-function createPath(svg){
+// create polygon path from an SVG path to use with clipper.js
+function createPath(svgPath){
   var paths = new ClipperLib.Paths();
   var path = new ClipperLib.Path();
   
-  var svgPaths = $('svg path')[0];
-  var len = svgPaths.getTotalLength();
+  var len = svgPath.getTotalLength();
   
   for(var i=0; i<len; i++){
-    var p = svgPaths.getPointAtLength(i);
+    var p = svgPath.getPointAtLength(i);
     path.push(new ClipperLib.IntPoint(p.x, p.y));
   }
   
