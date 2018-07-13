@@ -66,10 +66,10 @@ function createSVG(text){
   // console.log('svg: ' + svg);
   
   var path = textToSVG.getPath(text, options); 
-  // console.log('path: ' + path);
+  console.log('path: ' + path);
   
   var pathD = textToSVG.getD(text, options); // path data from path
-  // console.log('pathD: ' + pathD);
+  console.log('pathD: ' + pathD);
   
   var svgPath_path = svgPath(pathD);
   // console.log(svgPath_path.content);
@@ -82,9 +82,4 @@ function createSVG(text){
   
   
   return svg;
-}
-
-// remove the counters from specific letters of the SVG
-function removeCounters(svg){  
-  
 }

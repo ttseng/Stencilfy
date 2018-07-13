@@ -89,24 +89,10 @@ function createPath(svg){
 // demo clipper functionality
 function demoClipper() {
   var subj_paths = [[{X:10,Y:10},{X:110,Y:10},{X:110,Y:110},{X:10,Y:110}],
-                      [{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]]; 
+                      [{X:20,Y:20},{X:20,Y:100},{X:100,Y:100},{X:100,Y:20}]]; // THE ORIGINAL
     
-  // var clip_paths = [[{X:50,Y:50},{X:150,Y:50},{X:150,Y:150},{X:50,Y:150}], // 
-  //                     [{X:60,Y:60},{X:60,Y:140},{X:140,Y:140},{X:140,Y:60}]];  // THE ORIGINAL
-  
-  var clipXstart = 70;
-  var clipXend = 80;
-  var svgHeight = 160;
-  
-  var clip_paths = new ClipperLib.Paths();
-  var clip_path = new ClipperLib.Path();
-  clip_path.push(
-    new ClipperLib.IntPoint(clipXstart,0),
-    new ClipperLib.IntPoint(clipXend,0),
-    new ClipperLib.IntPoint(clipXend, svgHeight),
-    new ClipperLib.IntPoint(clipXstart, svgHeight)
-  );
-  clip_paths.push(clip_path);
+  var clip_paths = [[{X:50,Y:50},{X:150,Y:50},{X:150,Y:150},{X:50,Y:150}], // 
+                      [{X:60,Y:60},{X:60,Y:140},{X:140,Y:140},{X:140,Y:60}]];  // THE ORIGINAL
   
   var scale = 100;
   ClipperLib.JS.ScaleUpPaths(subj_paths, scale);
