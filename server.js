@@ -2,9 +2,10 @@
 // where your node app starts
 
 // init project
-const assets = require("./assets");
+var assets = require('./assets');
 const express = require('express');
 const app = express();
+app.use("/assets", assets);
 const port = 3000;
 
 const bodyParser = require("body-parser");

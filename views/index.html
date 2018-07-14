@@ -20,11 +20,7 @@
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="/style.css">
     
-    <!-- import the webpage's client-side javascript file -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script src="/client.js"></script>
-    <script src="/clipper.js"></script>
-    <script src="/counter.js"></script>
 
   </head>
   
@@ -56,6 +52,11 @@
     <script src="https://button.glitch.me/button.js"></script>
     
     <script>    
+      
+    function addSVGtoPage(origSVG, newSVG){
+      $('#textSVG').html(origSVG);
+      $('#textSVGstencil').html(newSVG);
+    }
       
    $(function(){
      $('.stencilBtn').click(function(e){
