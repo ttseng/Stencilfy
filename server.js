@@ -117,8 +117,8 @@ var exports = module.exports = {};
 
 function setupSVG(){
   	textToSVG = TextToSVG.loadSync();
+  // textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
     console.log('textToSVG ready!');
-  	// textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
 } 
 
 function getNewX(){
