@@ -34,7 +34,6 @@
       </h2>
       <form method="POST" id="fontForm"  action="/">
           <input id="fontFile" type="file">
-          <span class="info" id="font-name">Font Name</span>
         <button type="submit"></button>
       </form>
       
@@ -71,13 +70,11 @@
     fileButton.addEventListener('change', onReadFile, false);
       
     function onReadFile(e) {
-      document.getElementById('font-name').innerHTML = '';
       var file = e.target.files[0];
       var reader = new FileReader();
       reader.onload = function(e) {
           try {
               font = opentype.parse(e.target.result);
-              console.log(`font: ${font}`);
               console.log('loaded font');
               $('#fontForm').submit();
           } catch (err) {
@@ -99,9 +96,10 @@
       
     $('#fontForm').on('submit', function(event){
       console.log('attempting to submit fontForm');
+      var data = "test";
         $.ajax({
          type: 'POST',
-         data: font,
+         data: JSON.stringify(data),
          contentType: 'application/json',
          url: '/loadFont',
          success: function(data){

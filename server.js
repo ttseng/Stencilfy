@@ -47,8 +47,13 @@ app.get('/', function(request, response) {
   response.sendFile(__dirname + '/views/index.html');  
 });
 
+
+/////////
+// POST - LOAD FONT
+////////
+
 app.post('/loadFont', function(req, res){
-  console.log('post request received with input: ' + req.body);
+  console.log('loadFont post request received with input: ' + req.body);
   // setupSVG(); // update to load custom font
 });
 
