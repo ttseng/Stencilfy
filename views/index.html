@@ -21,12 +21,17 @@
     <link rel="stylesheet" href="/style.css">
     
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/opentype.js"></script>
 
   </head>
   
   <body>
     <div id="instructions">
       <h1>Stencil-ify</h1>
+      
+       <input id="fontFile" type="file">
+       <span class="info" id="font-name">Font Name</span>
+      
       <form method="POST" id="NameForm" action="/">
         <input name="text" type="text" placeholder="Your text">
         <button type="submit" class="stencilBtn">Remove Counters</button>
@@ -53,12 +58,40 @@
     
     <script>    
       
+    var fileButton = document.getElementById('fontFile');
+    fileButton.addEventListener('change', onReadFile, false);
+      
+    function onReadFile(e) {
+      document.getElementById('font-name').innerHTML = '';
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+          try {
+              font = opentype.parse(e.target.result);
+              console.log(`font: ${font}`);
+              console.log('loaded font');
+          } catch (err) {
+              showErrorMessage(err.toString());
+              if (err.stack) console.log(err.stack);
+        throw(err);
+          }
+      };
+      reader.onerror = function(err) {
+          showErrorMessage(err.toString());
+      };
+
+      reader.readAsArrayBuffer(file);
+  }
+      
     function addSVGtoPage(origSVG, newSVG){
       $('#textSVG').html(origSVG);
       $('#textSVGstencil').html(newSVG);
     }
       
    $(function(){
+     
+     var font = null;
+     
      $('.stencilBtn').click(function(e){
        e.preventDefault();
        console.log('stencil button clicked');
