@@ -82,3 +82,7 @@ footer {
 #textSVG{
   padding: 25px 5px;
 }
+
+#fontForm button{
+  display: none;
+}

@@ -35,6 +35,7 @@
       <form method="POST" id="fontForm"  action="/">
           <input id="fontFile" type="file">
           <span class="info" id="font-name">Font Name</span>
+        <button type="submit"></button>
       </form>
       
        <h2>
@@ -78,26 +79,8 @@
               font = opentype.parse(e.target.result);
               console.log(`font: ${font}`);
               console.log('loaded font');
-            
-            // submit the form
-            $('#fontForm').submit(function(event){
-              var data = font;
-                $.ajax({
-                 type: 'POST',
-                 data: JSON.stringify(data),
-                 contentType: 'application/json',
-                 url: '/loadFont',
-                 success: function(data){
-                   console.log('successly loaded');
-                   // var svg = data;
-                   // console.log(JSON.stringify(data));
-                   // addSVGtoPage(svg.origSVG, svg.newSVG);
-                 }
-               });
-              
-            });
+              $('#fontForm').submit();
           } catch (err) {
-              showErrorMessage(err.toString());
               if (err.stack) console.log(err.stack);
         throw(err);
           }
@@ -113,6 +96,24 @@
       $('#textSVG').html(origSVG);
       $('#textSVGstencil').html(newSVG);
     }
+      
+    $('#fontForm').submit(function(event){
+      console.log('attempting to submit fontForm');
+      var data = font;
+        $.ajax({
+         type: 'POST',
+         data: JSON.stringify(data),
+         contentType: 'application/json',
+         url: '/loadFont',
+         success: function(data){
+           console.log('successly loaded font');
+           // var svg = data;
+           // console.log(JSON.stringify(data));
+           // addSVGtoPage(svg.origSVG, svg.newSVG);
+         }
+       });
+
+    });
       
    $(function(){
      
