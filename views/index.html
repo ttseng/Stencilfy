@@ -97,12 +97,11 @@
       $('#textSVGstencil').html(newSVG);
     }
       
-    $('#fontForm').submit(function(event){
+    $('#fontForm').on('submit', function(event){
       console.log('attempting to submit fontForm');
-      var data = font;
         $.ajax({
          type: 'POST',
-         data: JSON.stringify(data),
+         data: font,
          contentType: 'application/json',
          url: '/loadFont',
          success: function(data){
