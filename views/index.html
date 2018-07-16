@@ -29,10 +29,18 @@
     <div id="instructions">
       <h1>Stencil-ify</h1>
       
-       <input id="fontFile" type="file">
-       <span class="info" id="font-name">Font Name</span>
+      <h2>
+        1. Load Font
+      </h2>
+      <form method="POST" id="fontForm"  action="/">
+          <input id="fontFile" type="file">
+          <span class="info" id="font-name">Font Name</span>
+      </form>
       
-      <form method="POST" id="NameForm" action="/">
+       <h2>
+        2. Enter text to stencil-ify
+      </h2>
+      <form method="POST" id="textForm" action="/">
         <input name="text" type="text" placeholder="Your text">
         <button type="submit" class="stencilBtn">Remove Counters</button>
       </form>
@@ -70,6 +78,24 @@
               font = opentype.parse(e.target.result);
               console.log(`font: ${font}`);
               console.log('loaded font');
+            
+            // submit the form
+            $('#fontForm').submit(function(event){
+              var data = font;
+                $.ajax({
+                 type: 'POST',
+                 data: JSON.stringify(data),
+                 contentType: 'application/json',
+                 url: '/loadFont',
+                 success: function(data){
+                   console.log('successly loaded');
+                   // var svg = data;
+                   // console.log(JSON.stringify(data));
+                   // addSVGtoPage(svg.origSVG, svg.newSVG);
+                 }
+               });
+              
+            });
           } catch (err) {
               showErrorMessage(err.toString());
               if (err.stack) console.log(err.stack);
