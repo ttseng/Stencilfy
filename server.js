@@ -53,7 +53,7 @@ app.get('/', function(request, response) {
 ////////
 
 app.post('/loadFont', function(req, res){
-  console.log('loadFont post request received with input: ' + req.body);
+  console.log('loadFont post request received with input: ' + req.body.text);
   // setupSVG(); // update to load custom font
 });
 
@@ -127,7 +127,7 @@ var exports = module.exports = {};
 function setupSVG(){
   	textToSVG = TextToSVG.loadSync();
   // textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
-    console.log('textToSVG ready!');
+    // console.log('textToSVG ready!');
 } 
 
 function getNewX(){

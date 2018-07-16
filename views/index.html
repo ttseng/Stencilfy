@@ -76,7 +76,7 @@
           try {
               font = opentype.parse(e.target.result);
               console.log('loaded font');
-              $('#fontForm').submit();
+              // $('#fontForm').submit();
           } catch (err) {
               if (err.stack) console.log(err.stack);
         throw(err);
@@ -94,9 +94,10 @@
       $('#textSVGstencil').html(newSVG);
     }
       
-    $('#fontForm').on('submit', function(event){
+    $('#fontForm').on('submit', function(e){
       console.log('attempting to submit fontForm');
-      var data = "test";
+      e.preventDefault();
+      var data = {test: "test"};
         $.ajax({
          type: 'POST',
          data: JSON.stringify(data),
