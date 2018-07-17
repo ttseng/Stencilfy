@@ -2,10 +2,8 @@
 // where your node app starts
 
 // init project
-var assets = require('./assets');
 const express = require('express');
 const app = express();
-app.use("/assets", assets);
 const port = 3000;
 
 const bodyParser = require("body-parser");
@@ -16,6 +14,11 @@ const svgpath = require('svgpath');
 const ClipperLib = require('clipper-lib');
 const pathProperties = require('svg-path-properties');
 
+// file storage
+var tmp = require('tmp');
+var fs = require('fs');
+const fileUpload = require('express-fileupload');
+
 var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9";
 var counters = counterStrings.split(",");
 
@@ -25,6 +28,8 @@ var defaultOptions = {x:0, y: 0, fontSize: 100, anchor: 'top baseline', attribut
 var scale = 100;
 var textWidths;; // keep track of the width of each character
 var fullHeight; // height of resulting SVG
+
+var defaultFontPath = "fonts/Roboto-Regular.ttf"
 
 //https://www.npmjs.com/package/svgpath
 
@@ -37,14 +42,48 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
-app.use("/assets", assets);
+app.use(fileUpload());
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
 	// load SVG stuff on page load
   setupSVG();
-  console.log(request.body);
   response.sendFile(__dirname + '/views/index.html');  
+});
+
+
+/////////
+// POST - SAVE FONT
+// Saves uploaded font to temporary storage
+////////
+app.post('/saveFont', function(req, res){
+  if(!req.files) console.log('no files were uploaded!');  
+  
+  let fontFile = req.files.file;
+  console.log(fontFile);
+  var fontName = fontFile.name;
+  var fontType = fontName.substring(fontName.indexOf('.'));
+  
+  // move the font file to temporary storage
+  tmp.file({postfix: fontType, keep: false, dir: "tmp"}, function _tempFileCreated(err, path, fd, cleanupCallback) {
+  if (err) throw err;
+ 
+  console.log('File: ', path);
+  console.log('Filedescriptor: ', fd);
+  console.log(`FileName: ${fontName}`);
+
+  fs.writeFile(path, fontFile.data, function(err){
+    console.log('wrote to file!');
+    // setup font with new font file
+    setupSVG(path);
+    cleanupCallback();
+    // return font name
+    console.log(`returning font name ${fontName}`);
+    res.send(fontName);
+  });
+
+
+  });
 });
 
 
@@ -53,8 +92,9 @@ app.get('/', function(request, response) {
 ////////
 
 app.post('/loadFont', function(req, res){
-  console.log('loadFont post request received with input: ' + req.body.text);
-  // setupSVG(); // update to load custom font
+  console.log('loadFont post request received with input: ' + JSON.stringify(req.body));
+  var fontPath = "fonts/" + req.body.font + "-Regular.ttf";
+  setupSVG(fontPath); // update to load custom font
 });
 
 //////////
@@ -124,9 +164,16 @@ var listener = app.listen(port, function () {
 
 var exports = module.exports = {};
 
-function setupSVG(){
-  	textToSVG = TextToSVG.loadSync();
-  // textToSVG = TextToSVG.loadSync('/assets/handy00.ttf');
+
+function setupSVG(fontPath){
+  console.log(`setupSVG with path ${fontPath}`);
+  if(fontPath){
+    console.log('loading selected font');
+    textToSVG = TextToSVG.loadSync(fontPath);
+  }else{
+     console.log('loading default font');
+    textToSVG = TextToSVG.loadSync(defaultFontPath);
+  }
     // console.log('textToSVG ready!');
 } 
 
@@ -212,7 +259,7 @@ function createPathFromSolution(solution_paths){
 function compileSVGfromPaths(pathsArr){
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
   var fullWidth = textWidths.reduce(reducer);
-   var newSVG = `<svg style="background-color:transparent" width="${fullWidth}" height="${fullHeight}">`;
+   var newSVG = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background-color:transparent" width="${fullWidth}" height="${fullHeight}">`;
   for(var i=0; i< pathsArr.length; i++){
     newSVG += pathsArr[i];
   }

@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Stencil-ify</title>
+    <title>Stencilfy</title>
     <meta name="description" content="A cool thing made with Glitch">
     <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
     <meta charset="utf-8">
@@ -23,51 +23,111 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="/opentype.js"></script>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+
+
   </head>
   
   <body>
-    <div id="instructions">
-      <h1>Stencil-ify</h1>
-      
-      <h2>
-        1. Load Font
-      </h2>
-      <form method="POST" id="fontForm"  action="/">
-          <input id="fontFile" type="file">
-        <button type="submit"></button>
-      </form>
-      
-       <h2>
-        2. Enter text to stencil-ify
+    <div id="header">
+      <h1>Stencilfy</h1>
+      <p>Removes <u>islands</u> from your text to make it laser-cutter ready.</p>
+    </div>
+    <div id="instructions">      
+      <div class="instructions-container">
+      <h2 class="step">
+        1. Enter text to stencilfy
       </h2>
       <form method="POST" id="textForm" action="/">
-        <input name="text" type="text" placeholder="Your text">
-        <button type="submit" class="stencilBtn">Remove Counters</button>
+        <input name="text" type="text" placeholder="Your text" value="bodega">
       </form>
     </div>
+
+    <div class="instructions-container">
+      <h2 class="step">
+        2. Select a font
+      </h2>
+      <br>
+      <img src="/assets/Roboto.svg" class="fontBtn active" data-name="Roboto"/>
+      <img src="/assets/FredokaOne.svg" class="fontBtn" data-name="FredokaOne"/>
+      <img src="/assets/Righteous.svg" class="fontBtn" data-name="Righteous"/>
+      <img src="/assets/OleoScript.svg" class="fontBtn" data-name="OleoScript"/>
+    </div>
+
+    <div class="instructions-container" style="margin-left: 15px; margin-bottom: 30px">
+      <h2 class="step" style="display: inherit; margin: 0; border: none;">
+        ...or upload your own font!
+      </h2>
+      <br>
+
+      <input id="fontFile" type="file" name="fontFile" onchange="saveFont()">
+      <label for="fontFile" class="fontLabel"><i class="fa fa-fileupload"></i>Choose a file...</label>
+      <div class="fontName">Font Name</div>
+    </div>
+  </div>
+
+<div class="instructions-container">
+  <h2 class="step">
+    3. Click the button below to stencilfy!
+  </h2><br>
+  <button type="submit" class="stencilBtn">Stencilfy <i class="fa fa-magic"></i></button>
+</div>
     
     <!-- Test imported SVG -->
+    <div id="output">
 
-    <div id="textSVG">
+    <div class="output-section stencil">
+      <h2>Stencilfied <span><a><button class="export stencil">Export SVG</button></a></span></h2>
+
+      <div id="svg-stencil" class="output-container"></div>
     </div>
-    
-    <div id="textSVGstencil">   
+
+      <div class="output-section default">
+        <h2>Unstenciled Font (for reference) <a download="output.svg"><button class="export default">Export SVG</button></a></span></h2></h2>
+        <div id="svg-default" class="output-container"></div>
+      </div>
+      
     </div>
-    
-    
-    <div id="svgContainer">
-    </div>
-  
-    
-    <!-- include the Glitch button to show what the webpage is about and
-          to make it easier for folks to view source and remix -->
-    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
-    <script src="https://button.glitch.me/button.js"></script>
     
     <script>    
+
+      $('.fontBtn').on('click', function(){
+        $('.fontBtn').removeClass('active');
+        $(this).addClass('active');
+
+        var font = $(this).data('name');
+        // load the new font on the server
+        selectFont(font);
+
+        if($('input[name="text"]').val()){
+          // rerun stencil with selected font
+          $('.stencilBtn').click();
+        } 
+      });
       
-    var fileButton = document.getElementById('fontFile');
-    fileButton.addEventListener('change', onReadFile, false);
+      // saveFont()
+      // an attempt to save the font to a temporary file to use in node
+      function saveFont(){
+        console.log('saveFont triggered');
+
+        var formData = new FormData();
+        formData.append('file', $('#fontFile')[0].files[0]);
+
+        $.ajax({
+          type: 'POST',
+          url: '/saveFont',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function(data){
+            console.log(data);
+            $('.fontName').html(data);
+            $('.fontName').css('display', 'inline-block');
+            $('.fontName').fadeIn();
+          }
+        });
+      }
       
     function onReadFile(e) {
       var file = e.target.files[0];
@@ -76,7 +136,6 @@
           try {
               font = opentype.parse(e.target.result);
               console.log('loaded font');
-              // $('#fontForm').submit();
           } catch (err) {
               if (err.stack) console.log(err.stack);
         throw(err);
@@ -88,35 +147,40 @@
 
       reader.readAsArrayBuffer(file);
   }
+
+// selectFont(font) 
+// attempt to send openType font object to node server (not currently working)
+  function selectFont(font){
+    $.ajax({
+       type: 'POST',
+       data: JSON.stringify({font: font}),
+       contentType: 'application/json',
+       url: '/loadFont',
+       success: function(data){
+         console.log('successfully loaded font');
+       }
+    });
+  }
       
     function addSVGtoPage(origSVG, newSVG){
-      $('#textSVG').html(origSVG);
-      $('#textSVGstencil').html(newSVG);
+      $('#svg-default').html(origSVG);
+      $('#svg-stencil').html(newSVG);
     }
-      
-    $('#fontForm').on('submit', function(e){
-      console.log('attempting to submit fontForm');
-      e.preventDefault();
-      var data = {test: "test"};
-        $.ajax({
-         type: 'POST',
-         data: JSON.stringify(data),
-         contentType: 'application/json',
-         url: '/loadFont',
-         success: function(data){
-           console.log('successly loaded font');
-           // var svg = data;
-           // console.log(JSON.stringify(data));
-           // addSVGtoPage(svg.origSVG, svg.newSVG);
-         }
-       });
 
-    });
-      
-   $(function(){
-     
-     var font = null;
-     
+    $('button.export').click(function(){
+        console.log('clicked export');
+        var svgData = $(this).closest('.output-section').find('svg')[0].outerHTML;
+        var svgBlob = new Blob([svgData], {type:"image/svg+xml"});
+        var svgUrl = URL.createObjectURL(svgBlob);
+        console.log(`svgUrl: ${svgUrl}`);
+        var downloadLink = document.createElement("a");
+        downloadLink.href = svgUrl;
+        downloadLink.download = "output.svg";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      });
+
      $('.stencilBtn').click(function(e){
        e.preventDefault();
        console.log('stencil button clicked');
@@ -134,11 +198,15 @@
            var svg = data;
            console.log(JSON.stringify(data));
            addSVGtoPage(svg.origSVG, svg.newSVG);
+           $('#output').fadeIn();
          }
        });
        
      });
-   });
+
+     $(window).load(function(){
+        // $('.stencilBtn').click();
+     });
       
     </script>
   </body>
