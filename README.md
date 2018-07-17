@@ -9,4 +9,6 @@ Counters are removed from the following characters: A,B,D,O,P,Q,R,a,b,d,e,g,o,p,
 
 A rough estimation, creating bridges at the center of the character, is used to remove counters.
 
-Created using [clipper.js](https://www.npmjs.com/package/js-clipper) and [text-to-svg](https://www.npmjs.com/package/text-to-svg), with sample fonts from (Google Fonts)[https://fonts.google.com/]
+Created using [clipper.js](https://www.npmjs.com/package/js-clipper) and [text-to-svg](https://www.npmjs.com/package/text-to-svg), with sample fonts from [Google Fonts](https://fonts.google.com/)
+
+Run locally with `npm install` and `nodemon`
