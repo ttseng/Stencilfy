@@ -158,7 +158,7 @@ function constructOptions(index){
 }
 
 // listen for requests :)
-var listener = app.listen(port, function () {
+var listener = app.listen(process.env.PORT || port, function () {
   // console.log('Your app is listening on port ' + listener.address().port);
 });
 
