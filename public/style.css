@@ -37,8 +37,11 @@ input{
   margin-left: 15px;
 }
 
+a{
+  color: white;
+}
+
 #content{
-  display: flex;
   margin: 0 -15px;
 }
 
@@ -189,4 +192,13 @@ button.export{
   padding: 20px;
   background: white;
   border: 1px solid #eaeaea;
+}
+
+.footer{
+    display: inline-block;
+    width: 100%;
+    border-top: 1px solid #525252;
+    padding: 15px;
+    font-size: smaller;
+}
 }
