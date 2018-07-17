@@ -21,11 +21,8 @@
     <link rel="stylesheet" href="/style.css">
     
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="/opentype.js"></script>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-
-
 
   </head>
   
@@ -34,67 +31,75 @@
       <h1>Stencilfy</h1>
       <p>Removes <u>islands</u> from your text to make it laser-cutter ready.</p>
     </div>
-    <div id="instructions">      
+
+    <div id="content">
+      <div id="instructions">      
+        <div class="instructions-container">
+        <h2 class="step">
+          1. Enter your text
+        </h2>
+        <form method="POST" id="textForm" action="/">
+          <input name="text" type="text" placeholder="Your text" value="bodega">
+        </form>
+      </div>
+
       <div class="instructions-container">
-      <h2 class="step">
-        1. Enter text to stencilfy
-      </h2>
-      <form method="POST" id="textForm" action="/">
-        <input name="text" type="text" placeholder="Your text" value="bodega">
-      </form>
+        <h2 class="step">
+          2. Select a font
+        </h2>
+        <br>
+        <img src="/assets/Roboto.svg" class="fontBtn active" data-name="Roboto"/>
+        <img src="/assets/FredokaOne.svg" class="fontBtn" data-name="FredokaOne"/>
+        <img src="/assets/Righteous.svg" class="fontBtn" data-name="Righteous"/>
+        <img src="/assets/OleoScript.svg" class="fontBtn" data-name="OleoScript"/>
+      </div>
+
+      <div class="instructions-container" style="margin-left: 15px; margin-bottom: 30px">
+        <h2 class="step" style="display: inherit; margin: 0; border: none;">
+          ...or upload your own font!
+        </h2>
+        <br>
+
+        <input id="fontFile" type="file" name="fontFile" onchange="saveFont()">
+        <label for="fontFile" class="fontLabel"><i class="fa fa-fileupload"></i>Choose a file...</label>
+        <div class="fontName">Font Name</div>
+      </div>
+      <div class="instructions-container">
+        <h2 class="step">
+          3. Click the button below to stencilfy!
+        </h2><br>
+        <button type="submit" class="stencilBtn">Stencilfy <i class="fa fa-magic"></i></button>
+      </div>
     </div>
+      
+      <!-- Test imported SVG -->
+      <div id="output">
 
-    <div class="instructions-container">
-      <h2 class="step">
-        2. Select a font
-      </h2>
-      <br>
-      <img src="/assets/Roboto.svg" class="fontBtn active" data-name="Roboto"/>
-      <img src="/assets/FredokaOne.svg" class="fontBtn" data-name="FredokaOne"/>
-      <img src="/assets/Righteous.svg" class="fontBtn" data-name="Righteous"/>
-      <img src="/assets/OleoScript.svg" class="fontBtn" data-name="OleoScript"/>
-    </div>
+      <div class="output-section stencil">
+        <h2 class="outputType">Stencilfied</h2>
 
-    <div class="instructions-container" style="margin-left: 15px; margin-bottom: 30px">
-      <h2 class="step" style="display: inherit; margin: 0; border: none;">
-        ...or upload your own font!
-      </h2>
-      <br>
+        <div id="svg-stencil" class="output-container"></div>
+        <a><button class="export stencil">Export SVG</button></a>
+      </div>
 
-      <input id="fontFile" type="file" name="fontFile" onchange="saveFont()">
-      <label for="fontFile" class="fontLabel"><i class="fa fa-fileupload"></i>Choose a file...</label>
-      <div class="fontName">Font Name</div>
-    </div>
-  </div>
-
-<div class="instructions-container">
-  <h2 class="step">
-    3. Click the button below to stencilfy!
-  </h2><br>
-  <button type="submit" class="stencilBtn">Stencilfy <i class="fa fa-magic"></i></button>
-</div>
-    
-    <!-- Test imported SVG -->
-    <div id="output">
-
-    <div class="output-section stencil">
-      <h2>Stencilfied <span><a><button class="export stencil">Export SVG</button></a></span></h2>
-
-      <div id="svg-stencil" class="output-container"></div>
-    </div>
-
-      <div class="output-section default">
-        <h2>Unstenciled Font (for reference) <a download="output.svg"><button class="export default">Export SVG</button></a></span></h2></h2>
-        <div id="svg-default" class="output-container"></div>
+        <div class="output-section default">
+          <h2 class="outputType">Original Font</h2>
+          <div id="svg-default" class="output-container"></div>
+          <a><button class="export default">Export SVG</button></a>
+        </div>
       </div>
       
     </div>
     
     <script>    
 
+      // toggle fonts when user selects different fonts
       $('.fontBtn').on('click', function(){
         $('.fontBtn').removeClass('active');
         $(this).addClass('active');
+
+        // remove font name if necessary
+        $('.fontName').fadeOut();
 
         var font = $(this).data('name');
         // load the new font on the server
@@ -107,9 +112,9 @@
       });
       
       // saveFont()
-      // an attempt to save the font to a temporary file to use in node
+      // save the uploaded font file to a temporary file to use in node
       function saveFont(){
-        console.log('saveFont triggered');
+        // console.log('saveFont triggered');
 
         var formData = new FormData();
         formData.append('file', $('#fontFile')[0].files[0]);
@@ -122,34 +127,25 @@
           processData: false,
           success: function(data){
             console.log(data);
+            // show font name
             $('.fontName').html(data);
             $('.fontName').css('display', 'inline-block');
             $('.fontName').fadeIn();
+            
+            // clear selected font
+            $('.fontBtn').removeClass('active');
+
+            if($('input[name="text"]').val()){
+              // rerun stencil with selected font
+              $('.stencilBtn').click();
+            }  
           }
         });
       }
       
-    function onReadFile(e) {
-      var file = e.target.files[0];
-      var reader = new FileReader();
-      reader.onload = function(e) {
-          try {
-              font = opentype.parse(e.target.result);
-              console.log('loaded font');
-          } catch (err) {
-              if (err.stack) console.log(err.stack);
-        throw(err);
-          }
-      };
-      reader.onerror = function(err) {
-          showErrorMessage(err.toString());
-      };
-
-      reader.readAsArrayBuffer(file);
-  }
 
 // selectFont(font) 
-// attempt to send openType font object to node server (not currently working)
+// switches font from pre-selected options
   function selectFont(font){
     $.ajax({
        type: 'POST',
@@ -161,12 +157,15 @@
        }
     });
   }
+
+  // add svg output to page
       
     function addSVGtoPage(origSVG, newSVG){
       $('#svg-default').html(origSVG);
       $('#svg-stencil').html(newSVG);
     }
 
+    // enable user to export SVGs
     $('button.export').click(function(){
         console.log('clicked export');
         var svgData = $(this).closest('.output-section').find('svg')[0].outerHTML;
@@ -175,15 +174,21 @@
         console.log(`svgUrl: ${svgUrl}`);
         var downloadLink = document.createElement("a");
         downloadLink.href = svgUrl;
-        downloadLink.download = "output.svg";
+        if($(this).hasClass('stencil')){
+          downloadLink.download = "stencil.svg";
+        }else{
+          downloadLink.download = "default.svg";
+        }
+        
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
       });
 
+    // run stencilfy
      $('.stencilBtn').click(function(e){
        e.preventDefault();
-       console.log('stencil button clicked');
+       // console.log('stencil button clicked');
        
        var data = {};
        data.text = $('input[name="text"]').val();
@@ -192,7 +197,7 @@
          type: 'POST',
          data: JSON.stringify(data),
          contentType: 'application/json',
-         url: '/',
+         url: '/createStencil',
          success: function(data){
            console.log('success');
            var svg = data;
@@ -205,7 +210,7 @@
      });
 
      $(window).load(function(){
-        // $('.stencilBtn').click();
+        $('.stencilBtn').click();
      });
       
     </script>

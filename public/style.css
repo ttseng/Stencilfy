@@ -6,38 +6,46 @@
 }
 
 body {
+  width: 90%;
+  margin: auto;
   font-family: "Helvetica Neue", helvetica, arial, sans-serif;
   background-color: white;
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-weight: 400;
-  color: #878787;
-  background: lavender;
+  color: white;
+  background: #2b2b2b;
 }
 
 h1 {
   font-size: 50px;
   font-weight: 300;
   margin-bottom: 0px;
-  color: black;
+  color: white;
 }
 
 h2{
   font-weight: 200;
-  color: black;
+  color: white;
 }
 
 u{
   text-decoration: underline dotted;
 }
 
-hr{
-  margin: 50px 15px 0px;
-  border: 1px dotted white;
-}
-
 input{
   margin-left: 15px;
+}
+
+#content{
+  display: flex;
+  margin: 0 -15px;
+}
+
+#instructions{
+  float: left;
+  width: 40%;
+  margin: 0 20px;
 }
 
 #fontFile{
@@ -64,14 +72,13 @@ label.fontLabel:hover{
 }
 
 .instructions-container img{
-  height: 70px;
+  height: 60px;
   display: inline;
   padding: 10px;
   border-radius: 4px;
   margin: 10px;
-  border: 1px solid lightgrey;
   transition: background 0.5s ease;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.5);
   box-shadow: 2px 2px #d0d0d07a;
 }
 
@@ -86,7 +93,7 @@ label.fontLabel:hover{
   transform: translate(1px, 1px);
 }
 
-.step{
+.step, .outputType{
   display: inline-block;
   margin-bottom: 15px;
   border-top: 2px solid #d4d4d4;
@@ -100,25 +107,10 @@ label.fontLabel:hover{
   font-size: 1.4em;
   margin-bottom: 30px;
   background: #32c5b7;
-}
-
-
-#output{
-  display: none;
-  padding: 20px;
-  border-top: 1px solid #d4d4d4;
-  background: #f7f7f7;
-}
-
-.output-container{
-  padding: 20px;
-  margin: 5px 0px 50px 0px;
-  background: white;
-  border: 1px solid #eaeaea;
+  border: none;
 }
 
 form {
-  margin-bottom: 25px;
   width: 100%;
   max-width: 340px;
   border-radius: 3px;
@@ -151,14 +143,21 @@ button:hover, label.fontLabel:hover{
 }
 
 label.fontLabel{
-  background-color: #cccccc;
+  background-color: white;
   color: black;
-  border: 1px solid lightgrey;
 }
 
 label.fontLabel:hover{
-  background-color: #bfbfbf;
+  background-color: #e6e6e6;
 }
+
+.fontName{
+  margin: 0px 20px;
+  display: none;
+  color: #9b9bff;
+  font-weight: bold;
+}
+
 
 button:active{
   box-shadow: none;
@@ -168,26 +167,27 @@ button:active{
 button.export{
     background-color: white;
     color: black;
-    margin: 0px 10px;
+    margin: 10px 0px;
     padding: 5px 10px;
 }
 
-li {
-  margin-bottom: 5px;
-}
-
-footer {
-  margin-top: 50px;
-  padding-top: 25px;
-  border-top: 1px solid lightgrey;
-}
-
-#fontForm{
+#output{
+  float: left;
   display: none;
+  padding: 0 15px;
+  background: #f5f5f5;
+  box-shadow: 2px 2px #d0d0d07a;
+  border-radius: 5px;
 }
 
-.fontName{
-  margin: 0px 20px;
-  display: none;
+#output h2{
+  width: 60%;
+  color: black;
+  margin-bottom: 10px;
 }
 
+.output-container{
+  padding: 20px;
+  background: white;
+  border: 1px solid #eaeaea;
+}

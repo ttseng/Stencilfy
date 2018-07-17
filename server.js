@@ -19,7 +19,7 @@ var tmp = require('tmp');
 var fs = require('fs');
 const fileUpload = require('express-fileupload');
 
-var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9";
+var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9,&,@";
 var counters = counterStrings.split(",");
 
 // font information
@@ -31,12 +31,6 @@ var fullHeight; // height of resulting SVG
 
 var defaultFontPath = "fonts/Roboto-Regular.ttf"
 
-//https://www.npmjs.com/package/svgpath
-
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
-
-// http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({
     extended: true
@@ -44,16 +38,13 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(fileUpload());
 
-// http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
-	// load SVG stuff on page load
   setupSVG();
   response.sendFile(__dirname + '/views/index.html');  
 });
 
-
 /////////
-// POST - SAVE FONT
+// SAVE FONT - POST
 // Saves uploaded font to temporary storage
 ////////
 app.post('/saveFont', function(req, res){
@@ -82,13 +73,13 @@ app.post('/saveFont', function(req, res){
     res.send(fontName);
   });
 
-
   });
 });
 
 
 /////////
-// POST - LOAD FONT
+// LOAD FONT - POST
+// Loads selected font from pre-defined set
 ////////
 
 app.post('/loadFont', function(req, res){
@@ -98,9 +89,10 @@ app.post('/loadFont', function(req, res){
 });
 
 //////////
-// POST - get text input from textfield
+// CREATE STENCIL - POST 
+// Take text input from form and create Stencil SVG
 //////////
-app.post('/', function(req, res){
+app.post('/createStencil', function(req, res){
   console.log('post request received with input: ' + req.body.text);  
   var input = req.body.text;
   textWidths = [];
@@ -109,20 +101,24 @@ app.post('/', function(req, res){
   var origPathArr = []; // storing individual paths for each character, before removing counters
   var newPathArr = []; // storing individual paths for each character, after removing counters
   
-  fullHeight = textToSVG.getMetrics(inputChars[0], defaultOptions).height; // for now, restrict to single line
+  fullHeight = textToSVG.getMetrics(inputChars[0], defaultOptions).height; // for now, restrict output SVG to single line
   
+  // construct each individual character from the input
   for(var i=0; i<inputChars.length; i++){
+
+    // create SVG from character (no stencil applied yet)
     var newOptions = constructOptions(i);
     var svgPath = textToSVG.getPath(inputChars[i], newOptions); 
-    // console.log(`svgPath: ${svgPath}`);
+    // console.log(`svgPath for ${inputCharts[i]`: ${svgPath}`);
     var charWidth = textToSVG.getMetrics(inputChars[i], defaultOptions).width;
-    console.log('charWidth: ' + charWidth);
+    // console.log('charWidth: ' + charWidth);
     textWidths.push(charWidth);
     origPathArr.push(svgPath);
   
-    // remove counter if necessary - ultimately want to iterate over ever character
+    // apply stencil if necessary (if character has a counter)
     if(counters.includes(inputChars[i])){
       var newSVGpath = removeCounters(svgPath, inputChars[i]); // remove counters if necessary
+      console.log(`newSVGpath for ${inputChars[i]}: ${newSVGpath}`);
     }else{
       var newSVGpath = svgPath;
     }
@@ -132,9 +128,9 @@ app.post('/', function(req, res){
   }
   // compile all paths into a single svg
   var origSVG = compileSVGfromPaths(origPathArr);
-  console.log(`origSVG: ${origSVG}`);
+  // console.log(`origSVG: ${origSVG}`);
   var newSVG = compileSVGfromPaths(newPathArr);
-  console.log(`newSVG: ${newSVG}`);
+  // console.log(`newSVG: ${newSVG}`);
   
   // return cleaned svg
   var respBody = {origSVG, newSVG};
@@ -199,32 +195,33 @@ function getSVGinfo(input){
 // takes an SVG Path and character and returns an SVG Path that has been stenciled
 function removeCounters(svgPath, char) {
   console.log("removeCounters");
-  var maskDim = 5;
+  var maskDim = 5; // how wide the mask rectangle should be
   var svgInfo = getSVGinfo(char);
-  
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
-  var subj_paths = createPath(svgInfo.pathD);
+  var subjPaths = createPath(svgInfo.pathD);
+  console.log(`svgInfo.pathD for ${char}: ${svgInfo.pathD}`);
+  console.log(`polygonPaths for ${char}: ${JSON.stringify(subjPaths)}`);
 
   var clipXstart = (svgInfo.width-maskDim)/2;
   var clipXend = (svgInfo.width+maskDim)/2;
   
-  var clip_paths = new ClipperLib.Paths();
-  var clip_path = new ClipperLib.Path();
-  clip_path.push(
+  var clipPaths = new ClipperLib.Paths();
+  var clipPath = new ClipperLib.Path();
+  clipPath.push(
     new ClipperLib.IntPoint(clipXstart,0),
     new ClipperLib.IntPoint(clipXend,0),
     new ClipperLib.IntPoint(clipXend, svgInfo.height),
     new ClipperLib.IntPoint(clipXstart, svgInfo.height)
   );
-  clip_paths.push(clip_path);
+  clipPaths.push(clipPath);
   
   // setup stuff
-  ClipperLib.JS.ScaleUpPaths(subj_paths, scale);
-  ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
+  ClipperLib.JS.ScaleUpPaths(subjPaths, scale);
+  ClipperLib.JS.ScaleUpPaths(clipPaths, scale);
   var cpr = new ClipperLib.Clipper();
-  cpr.AddPaths(subj_paths, ClipperLib.PolyType.ptSubject, true);
-  cpr.AddPaths(clip_paths, ClipperLib.PolyType.ptClip, true);
+  cpr.AddPaths(subjPaths, ClipperLib.PolyType.ptSubject, true);
+  cpr.AddPaths(clipPaths, ClipperLib.PolyType.ptClip, true);
   var subject_fillType = ClipperLib.PolyFillType.pftNonZero;
   var clip_fillType = ClipperLib.PolyFillType.pftNonZero;
   var clipType = ClipperLib.ClipType.ctDifference;
@@ -232,17 +229,17 @@ function removeCounters(svgPath, char) {
   // perform boolean
   var solution_paths = new ClipperLib.Paths();
   cpr.Execute(clipType, solution_paths, subject_fillType, clip_fillType);
-  console.log('solutionsPath: ' + JSON.stringify(solution_paths));
+  // console.log('solutionsPath: ' + JSON.stringify(solution_paths));
   
   var newSVGPathD = paths2string(solution_paths, scale);  
-  console.log('newSVGPathD ' + newSVGPathD);
+  // console.log('newSVGPathD ' + newSVGPathD);
   
   var transformed = svgpath(newSVGPathD).translate(getNewX()-textWidths[textWidths.length-1], 0);
   // console.log('transformed ' + transformed);
   
   var newSVGPath = '<path stroke="black" fill="none" stroke-width="1" d="' + transformed + '"/>';
   
-  console.log(`newSVGPath: ${newSVGPath}`);
+  // console.log(`newSVGPath for ${char}: ${newSVGPath}`);
   // newSVGPath = svgpath(newSVGPath).translate(getNewX, 0);
   
   return newSVGPath;
