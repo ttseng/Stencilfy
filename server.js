@@ -19,12 +19,14 @@ var tmp = require('tmp');
 var fs = require('fs');
 const fileUpload = require('express-fileupload');
 
-var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9,&,@";
+var counterStrings = "A,B,D,O,P,Q,R,a,b,d,e,g,o,p,q,0,4,6,8,9,&,@,%";
 var counters = counterStrings.split(",");
+
+var paddingFactor = 1.1;  // how much extra to size the resulting SVG box
 
 // font information
 const attributes = {stroke: 'black', fill: 'transparent'};
-var defaultOptions = {x:0, y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
+var defaultOptions = {x:0, y: 1, fontSize: 100, anchor: 'top baseline', attributes: attributes};
 var scale = 100;
 var textWidths;; // keep track of the width of each character
 var fullHeight; // height of resulting SVG
@@ -101,7 +103,7 @@ app.post('/createStencil', function(req, res){
   var origPathArr = []; // storing individual paths for each character, before removing counters
   var newPathArr = []; // storing individual paths for each character, after removing counters
   
-  fullHeight = textToSVG.getMetrics(inputChars[0], defaultOptions).height; // for now, restrict output SVG to single line
+  fullHeight = textToSVG.getMetrics(inputChars[0], defaultOptions).height*paddingFactor; // for now, restrict output SVG to single line
   
   // construct each individual character from the input
   for(var i=0; i<inputChars.length; i++){
@@ -111,6 +113,8 @@ app.post('/createStencil', function(req, res){
     var svgPath = textToSVG.getPath(inputChars[i], newOptions); 
     // console.log(`svgPath for ${inputCharts[i]`: ${svgPath}`);
     var charWidth = textToSVG.getMetrics(inputChars[i], defaultOptions).width;
+    var charHeight = textToSVG.getMetrics(inputChars[i], defaultOptions).height;
+    if(charHeight > fullHeight) fullHeight = chartHeight;
     // console.log('charWidth: ' + charWidth);
     textWidths.push(charWidth);
     origPathArr.push(svgPath);
@@ -199,8 +203,8 @@ function removeCounters(svgPath, char) {
   var svgInfo = getSVGinfo(char);
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
-  var subjPaths = createPath(svgInfo.pathD);
   console.log(`svgInfo.pathD for ${char}: ${svgInfo.pathD}`);
+  var subjPaths = createPath(svgInfo.pathD);
   console.log(`polygonPaths for ${char}: ${JSON.stringify(subjPaths)}`);
 
   var clipXstart = (svgInfo.width-maskDim)/2;
@@ -255,7 +259,7 @@ function createPathFromSolution(solution_paths){
 // create an svg from a path of arrays
 function compileSVGfromPaths(pathsArr){
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  var fullWidth = textWidths.reduce(reducer);
+  var fullWidth = textWidths.reduce(reducer)*paddingFactor; // add a little bit extra
    var newSVG = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background-color:transparent" width="${fullWidth}" height="${fullHeight}">`;
   for(var i=0; i< pathsArr.length; i++){
     newSVG += pathsArr[i];
@@ -284,16 +288,64 @@ function paths2string (paths, scale) {
 // create polygon path from an SVG path to use with clipper.js
 function createPath(svgPathD){
   var paths = new ClipperLib.Paths();
-  var path = new ClipperLib.Path();
-  
-  var properties = pathProperties.svgPathProperties(svgPathD);
-  var len = properties.getTotalLength();
-  
-  for(var i=0; i<len; i++){
-    var p = properties.getPointAtLength(i);
-    path.push(new ClipperLib.IntPoint(p.x, p.y));
+
+  // split svgPathD into arrays based on closed paths
+  var indexes = getAllIndexes(svgPathD, "M");
+  console.log(`indexes length ${indexes.length}`);
+
+  var newSVGpathsD = [];
+
+  for(i=0; i<indexes.length; i++){
+    var subPath = "";
+    if(i == 0){
+      subPath = svgPathD.substr(i, indexes[i+1]);
+    }else if(i == indexes.length-1){
+      // last path
+      subPath = svgPathD.substr(indexes[i]);
+    }else{
+      subPath = svgPathD.substr(indexes[i], indexes[i+1]);
+    }
+    // sometimes run into issue with the path not ending with Z - a quick fix here
+    if(subPath.slice(-1) != "Z"){
+      subPath = subPath.replaceAt(subPath.length-1, "Z");
+    }
+    console.log(`subPath for ${i}: ${subPath}`);
+    newSVGpathsD.push(subPath);
   }
+
+  console.log(`newSVGpathsD.length: ${newSVGpathsD.length}`);
+
+  for(x=0; x<newSVGpathsD.length; x++){
+    console.log(`path creation loop ${x}`);
+    var path = new ClipperLib.Path();
+    var properties = pathProperties.svgPathProperties(newSVGpathsD[x]);
+    var len = properties.getTotalLength();
   
-  paths.push(path);
+    for(var i=0; i<len; i++){
+      var p = properties.getPointAtLength(i);
+      path.push(new ClipperLib.IntPoint(p.x, p.y));
+    }
+    console.log(`path: ${JSON.stringify(path)}`);
+    console.log('');
+    // add this array to paths
+    paths.push(path);
+  }
+
+  console.log(`paths: ${JSON.stringify(paths)}`);
+
   return paths;
+}
+
+// getAllIndexes
+// find indexes of all occurences of val within a string
+function getAllIndexes(arr, val) {
+    var indexes = [], i;
+    for(i = 0; i < arr.length; i++)
+        if (arr[i] === val)
+            indexes.push(i);
+    return indexes;
+}
+
+String.prototype.replaceAt=function(index, replacement) {
+    return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
 }
