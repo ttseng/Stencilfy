@@ -25,6 +25,40 @@
   </head>
   
   <body>
+
+    <div id="smallOverview">
+      <h1>Stencilfy</h1>
+      <hr>
+      <p>
+          Stencilfy creates stenciled text by removing internal paths (called islands or counters) from your characters, so</p>
+      </p>
+
+      <img src="assets/bodega_default.svg"/>
+
+      <p>becomes</p>
+
+      <img src="assets/bodega_stencil.svg"/>
+
+      <p>This can be especially handy if you're laser-cutting text!</p>
+
+      <p>You can import any font of your choice and export an SVG so you can bring the output into CorelDraw, Illustrator, or the graphics software of your choice.
+      </p>
+
+      <p>Here's a video of the full workflow</p>
+      <video controls autoplay width="100%">
+        <source src="/assets/stencilfy.mp4" type="video/mp4">
+      </video>
+      
+      <p>
+        Stencilfy works best on desktop, so open it on a larger screen to get started.
+      </p>
+      <hr>
+      <p>
+        Built by <a href="https://twitter.com/scientiffic" target="_blank">@scientiffic</a> at <a href="https://www.recurse.com/" target="_blank">Recurse</a> using <a href="https://www.npmjs.com/package/js-clipper" target="_blank">clipper.js</a> and <a href="https://github.com/shrhdk/text-to-svg" target="_blank">text-to-svg</a>.</p>
+      </p>
+    </div>
+
+
     <div id="header">
       <h1>Stencilfy</h1>
       <p>Removes <u>islands</u> from your text to make it laser-cutter ready.</p>
@@ -37,7 +71,7 @@
           1. Enter your text
         </h2>
         <form method="POST" id="textForm" action="/">
-          <input name="text" type="text" placeholder="Your text" value="bodega">
+          <input name="text" type="text" placeholder="Your text">
         </form>
       </div>
 
@@ -86,12 +120,15 @@
           <a><button class="export default">Export SVG</button></a>
         </div>
       </div>
-
-      <div class="footer">
-        Built by <a href="https://twitter.com/scientiffic" target="_blank">@scientiffic</a> at <a href="https://www.recurse.com/" target="_blank">Recurse</a>
-      </div>
       
     </div>
+
+    <div class="footer">
+      Built by <a href="https://twitter.com/scientiffic" target="_blank">@scientiffic</a> at <a href="https://www.recurse.com/" target="_blank">Recurse</a>
+    </div>
+
+  </body>
+  </html>
     
     <script>    
 
@@ -212,15 +249,29 @@
            var svg = data;
            console.log(JSON.stringify(data));
            addSVGtoPage(svg.origSVG, svg.newSVG);
-           $('#output').fadeIn();
+           $('#output').addClass('active').fadeIn();
          }
        });
        
      });
 
      $(window).load(function(){
-        $('.stencilBtn').click();
+        // $('.stencilBtn').click();
+         if($(window).width() < 500){
+          $('div').not('#smallOverview').hide();
+          $('#smallOverview').show();
+        }
      });
+
+      $(window).resize(function(){
+        if($(window).width() > 500){
+          $('div').not('#smallOverview').show();
+          if($('#output').hasClass('active')==false){
+            $('#output').hide();
+          }
+          $('#smallOverview').hide();
+        }
+      });
       
     </script>
   </body>
