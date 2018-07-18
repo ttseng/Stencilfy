@@ -51,7 +51,7 @@
         <img src="/assets/Righteous.svg" class="fontBtn" data-name="Righteous"/>
       </div>
 
-      <div class="instructions-container" style="margin-left: 15px; margin-bottom: 30px">
+      <div class="instructions-container" style="margin-left: 15px;">
         <h2 class="step" style="display: inherit; margin: 0; border: none;">
           ...or upload your own font!
         </h2>
@@ -59,6 +59,7 @@
 
         <input id="fontFile" type="file" name="fontFile" onchange="saveFont()">
         <label for="fontFile" class="fontLabel"><i class="fa fa-fileupload"></i>Choose a file...</label>
+        <br>
         <div class="fontName">Font Name</div>
       </div>
       <div class="instructions-container">
@@ -112,36 +113,43 @@
         } 
       });
       
+      var validFontTypes = ["otf", "ttf", "woff"];
       // saveFont()
       // save the uploaded font file to a temporary file to use in node
       function saveFont(){
         // console.log('saveFont triggered');
 
-        var formData = new FormData();
-        formData.append('file', $('#fontFile')[0].files[0]);
+        var fileName = $('#fontFile')[0].files[0].name;
+        var fileExt = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
+        if(validFontTypes.includes(fileExt)){
+          var formData = new FormData();
+          formData.append('file', $('#fontFile')[0].files[0]);
 
-        $.ajax({
-          type: 'POST',
-          url: '/saveFont',
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function(data){
-            console.log(data);
-            // show font name
-            $('.fontName').html(data);
-            $('.fontName').css('display', 'inline-block');
-            $('.fontName').fadeIn();
-            
-            // clear selected font
-            $('.fontBtn').removeClass('active');
+          $.ajax({
+            type: 'POST',
+            url: '/saveFont',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(data){
+              console.log(data);
+              // show font name
+              $('.fontName').html(data);
+              $('.fontName').css('display', 'inline-block');
+              $('.fontName').fadeIn();
+              
+              // clear selected font
+              $('.fontBtn').removeClass('active');
 
-            if($('input[name="text"]').val()){
-              // rerun stencil with selected font
-              $('.stencilBtn').click();
-            }  
-          }
-        });
+              if($('input[name="text"]').val()){
+                // rerun stencil with selected font
+                $('.stencilBtn').click();
+              }  
+            }
+          });
+        }else{
+          window.alert('Please select a valid .otf, .ttf., or .woff font file');
+        }
       }
       
 

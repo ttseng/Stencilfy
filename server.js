@@ -103,7 +103,7 @@ app.post('/createStencil', function(req, res){
   var origPathArr = []; // storing individual paths for each character, before removing counters
   var newPathArr = []; // storing individual paths for each character, after removing counters
   
-  fullHeight = textToSVG.getMetrics(inputChars[0], defaultOptions).height*paddingFactor; // for now, restrict output SVG to single line
+  fullHeight = (textToSVG.getMetrics(inputChars[0], defaultOptions).height-textToSVG.getMetrics(inputChars[0], defaultOptions).descender)*paddingFactor; // for now, restrict output SVG to single line
   
   // construct each individual character from the input
   for(var i=0; i<inputChars.length; i++){
@@ -187,7 +187,7 @@ function getNewX(){
 function getSVGinfo(input){
   var info = {};
   var width = textToSVG.getMetrics(input, defaultOptions).width;
-  var height = textToSVG.getMetrics(input, defaultOptions).height;
+  var height = textToSVG.getMetrics(input, defaultOptions).height-textToSVG.getMetrics(input, defaultOptions).descender;
   var pathD = textToSVG.getD(input, defaultOptions);
   info["width"] = width;
   info["height"] = height;
@@ -319,10 +319,12 @@ function createPath(svgPathD){
     console.log(`path creation loop ${x}`);
     var path = new ClipperLib.Path();
     var properties = pathProperties.svgPathProperties(newSVGpathsD[x]);
-    var len = properties.getTotalLength();
+    var len = Math.round(properties.getTotalLength());
+    console.log(`path length ${len}`);
   
     for(var i=0; i<len; i++){
       var p = properties.getPointAtLength(i);
+      console.log(`p ${JSON.stringify(p)} for index ${i}`);
       path.push(new ClipperLib.IntPoint(p.x, p.y));
     }
     console.log(`path: ${JSON.stringify(path)}`);

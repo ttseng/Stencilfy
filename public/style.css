@@ -155,7 +155,7 @@ label.fontLabel:hover{
 }
 
 .fontName{
-  margin: 0px 20px;
+  margin: 25px 0px 0px;
   display: none;
   color: #9b9bff;
   font-weight: bold;
