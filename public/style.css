@@ -45,6 +45,10 @@ a{
   display: none;
 }
 
+#smallOverview img{
+  max-width: 100%;
+}
+
 video{
   margin: 30px 0px;
 }
