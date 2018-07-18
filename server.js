@@ -13,6 +13,7 @@ var textToSVG;
 const svgpath = require('svgpath'); 
 const ClipperLib = require('clipper-lib');
 const pathProperties = require('svg-path-properties');
+var point = require('point-at-length');
 
 // file storage
 var tmp = require('tmp');
@@ -323,14 +324,20 @@ function createPath(svgPathD){
   for(x=0; x<newSVGpathsD.length; x++){
     console.log(`path creation loop ${x}`);
     var path = new ClipperLib.Path();
-    var properties = pathProperties.svgPathProperties(newSVGpathsD[x]);
-    var len = Math.round(properties.getTotalLength());
+    
+    // var properties = pathProperties.svgPathProperties(newSVGpathsD[x]);
+    // var len = Math.round(properties.getTotalLength());
+    var pts = point(newSVGpathsD[x]);
+    var len = Math.round(pts.length());
+
     console.log(`path length ${len}`);
   
     for(var i=0; i<len; i++){
-      var p = properties.getPointAtLength(i);
+      var p = pts.at(i);
+      // var p = properties.getPointAtLength(i);
       console.log(`${i} p ${JSON.stringify(p)}`);
-      path.push(new ClipperLib.IntPoint(p.x, p.y));
+      // path.push(new ClipperLib.IntPoint(p.x, p.y));
+      path.push(new ClipperLib.IntPoint(p[0], p[1]));
     }
     console.log(`path: ${JSON.stringify(path)}`);
     console.log('');
