@@ -318,7 +318,7 @@ function createPath(svgPathD){
     newSVGpathsD.push(subPath);
   }
 
-  console.log(`newSVGpathsD.length: ${newSVGpathsD.length}`);
+  console.log(`newSVGpathsD: ${JSON.stringify(newSVGpathsD)}`);
 
   for(x=0; x<newSVGpathsD.length; x++){
     console.log(`path creation loop ${x}`);
@@ -329,7 +329,7 @@ function createPath(svgPathD){
   
     for(var i=0; i<len; i++){
       var p = properties.getPointAtLength(i);
-      console.log(`p ${JSON.stringify(p)} for index ${i}`);
+      console.log(`${i} p ${JSON.stringify(p)}`);
       path.push(new ClipperLib.IntPoint(p.x, p.y));
     }
     console.log(`path: ${JSON.stringify(path)}`);
