@@ -53,7 +53,7 @@ app.post('/saveFont', function(req, res){
   if(!req.files) console.log('no files were uploaded!');  
   
   let fontFile = req.files.file;
-  console.log(fontFile);
+  // console.log(fontFile);
   var fontName = fontFile.name;
   var fontType = fontName.substring(fontName.indexOf('.'));
   
@@ -61,17 +61,17 @@ app.post('/saveFont', function(req, res){
   tmp.file({postfix: fontType, keep: false, dir: "tmp"}, function _tempFileCreated(err, path, fd, cleanupCallback) {
   if (err) throw err;
  
-  console.log('File: ', path);
-  console.log('Filedescriptor: ', fd);
-  console.log(`FileName: ${fontName}`);
+  // console.log('File: ', path);
+  // console.log('Filedescriptor: ', fd);
+  // console.log(`FileName: ${fontName}`);
 
   fs.writeFile(path, fontFile.data, function(err){
-    console.log('wrote to file!');
+    // console.log('wrote to file!');
     // setup font with new font file
     setupSVG(path);
     cleanupCallback();
     // return font name
-    console.log(`returning font name ${fontName}`);
+    // console.log(`returning font name ${fontName}`);
     res.send(fontName);
   });
 
@@ -95,7 +95,7 @@ app.post('/loadFont', function(req, res){
 // Take text input from form and create Stencil SVG
 //////////
 app.post('/createStencil', function(req, res){
-  console.log('post request received with input: ' + req.body.text);  
+  console.log('//////// post request received with input: ' + req.body.text);  
   var input = req.body.text;
   textWidths = [];
   var inputChars = input.split('');
@@ -203,6 +203,7 @@ function removeCounters(svgPath, char) {
   var svgInfo = getSVGinfo(char);
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
+  console.log(`//////////// on char ${char}`);
   console.log(`svgInfo.pathD for ${char}: ${svgInfo.pathD}`);
   var subjPaths = createPath(svgInfo.pathD);
   console.log(`polygonPaths for ${char}: ${JSON.stringify(subjPaths)}`);
@@ -291,25 +292,29 @@ function createPath(svgPathD){
 
   // split svgPathD into arrays based on closed paths
   var indexes = getAllIndexes(svgPathD, "M");
-  console.log(`indexes length ${indexes.length}`);
+  console.log(`indexes: ${JSON.stringify(indexes)}`);
 
   var newSVGpathsD = [];
 
   for(i=0; i<indexes.length; i++){
     var subPath = "";
     if(i == 0){
-      subPath = svgPathD.substr(i, indexes[i+1]);
+      console.log('first index');
+      subPath = svgPathD.substring(i, indexes[i+1]);
     }else if(i == indexes.length-1){
       // last path
-      subPath = svgPathD.substr(indexes[i]);
+      console.log('last index');
+      subPath = svgPathD.substring(indexes[i]);
     }else{
-      subPath = svgPathD.substr(indexes[i], indexes[i+1]);
+      console.log(`substring ${indexes[i]} to ${indexes[i+1]}`);
+      subPath = svgPathD.substring(indexes[i], indexes[i+1]);
     }
     // sometimes run into issue with the path not ending with Z - a quick fix here
     if(subPath.slice(-1) != "Z"){
       subPath = subPath.replaceAt(subPath.length-1, "Z");
     }
-    console.log(`subPath for ${i}: ${subPath}`);
+    console.log(`${i} subPath with length ${subPath.length} : ${subPath}`);
+    console.log(`----------------------`);
     newSVGpathsD.push(subPath);
   }
 
