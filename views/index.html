@@ -71,7 +71,7 @@
           1. Enter your text
         </h2>
         <form method="POST" id="textForm" action="/">
-          <input name="text" type="text" placeholder="Your text">
+          <input name="text" type="text" id="text" placeholder="Your text">
         </form>
       </div>
 
@@ -253,6 +253,13 @@
          }
        });
        
+     });
+
+     // prevent enter key input from text field
+     $('#text').keypress(function(e){
+      if(e.keyCode == 13){
+        e.preventDefault();
+      }
      });
 
      $(window).load(function(){
