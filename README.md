@@ -1,6 +1,10 @@
 Stencilfy
 =================
 
+Try it out at [http://stencilfy.herokuapp.com/](http://stencilfy.herokuapp.com/)
+
+---
+
 Removes islands from your text to make it laser-cutter ready.
 
 Enter your text, select a font, and export an SVG with islands automatically removed from your characters.
