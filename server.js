@@ -51,6 +51,7 @@ app.get('/', function(request, response) {
 // Saves uploaded font to temporary storage
 ////////
 app.post('/saveFont', function(req, res){
+  console.log('saveFont');
   if(!req.files) console.log('no files were uploaded!');  
   
   let fontFile = req.files.file;
@@ -67,12 +68,12 @@ app.post('/saveFont', function(req, res){
   // console.log(`FileName: ${fontName}`);
 
   fs.writeFile(path, fontFile.data, function(err){
-    // console.log('wrote to file!');
+    console.log('wrote to file!');
     // setup font with new font file
     setupSVG(path);
     cleanupCallback();
     // return font name
-    // console.log(`returning font name ${fontName}`);
+    console.log(`returning font name ${fontName}`);
     res.send(fontName);
   });
 
@@ -123,13 +124,13 @@ app.post('/createStencil', function(req, res){
     // apply stencil if necessary (if character has a counter)
     if(counters.includes(inputChars[i])){
       var newSVGpath = removeCounters(svgPath, inputChars[i]); // remove counters if necessary
-      console.log(`newSVGpath for ${inputChars[i]}: ${newSVGpath}`);
+      // console.log(`newSVGpath for ${inputChars[i]}: ${newSVGpath}`);
     }else{
       var newSVGpath = svgPath;
     }
     // console.log(`newSVGpath ${newSVGpath}`);
     newPathArr.push(newSVGpath);
-    console.log('');
+    // console.log('');
   }
   // compile all paths into a single svg
   var origSVG = compileSVGfromPaths(origPathArr);
@@ -145,7 +146,7 @@ app.post('/createStencil', function(req, res){
 // constructOptions(index)
 // create options for generating svg with text-to-svg that moves x position for each character
 function constructOptions(index){
-  console.log(`constructOptions with index ${index}`);
+  // console.log(`constructOptions with index ${index}`);
   var options = {y: 0, fontSize: 100, anchor: 'top baseline', attributes: attributes};
   if(index == 0){
     var x = 0;
@@ -153,8 +154,8 @@ function constructOptions(index){
     var x = getNewX(); // finds the new X position for the latest character
   }
   options["x"] = x;
-  console.log('newX: ' + options["x"]);
-  console.log(`textWidths ${textWidths}`);
+  // console.log('newX: ' + options["x"]);
+  // console.log(`textWidths ${textWidths}`);
   return options;
 }
 
@@ -199,15 +200,15 @@ function getSVGinfo(input){
 // removeCounters(svgPath, char)
 // takes an SVG Path and character and returns an SVG Path that has been stenciled
 function removeCounters(svgPath, char) {
-  console.log("removeCounters");
+  // console.log("removeCounters");
   var maskDim = 5; // how wide the mask rectangle should be
   var svgInfo = getSVGinfo(char);
   // console.log(`svgWidth: ${svgWidth} svgHeight: ${svgHeight}`);
   
-  console.log(`//////////// on char ${char}`);
-  console.log(`svgInfo.pathD for ${char}: ${svgInfo.pathD}`);
+  // console.log(`//////////// on char ${char}`);
+  // console.log(`svgInfo.pathD for ${char}: ${svgInfo.pathD}`);
   var subjPaths = createPath(svgInfo.pathD);
-  console.log(`polygonPaths for ${char}: ${JSON.stringify(subjPaths)}`);
+  // console.log(`polygonPaths for ${char}: ${JSON.stringify(subjPaths)}`);
 
   var clipXstart = (svgInfo.width-maskDim)/2;
   var clipXend = (svgInfo.width+maskDim)/2;
@@ -293,36 +294,36 @@ function createPath(svgPathD){
 
   // split svgPathD into arrays based on closed paths
   var indexes = getAllIndexes(svgPathD, "M");
-  console.log(`indexes: ${JSON.stringify(indexes)}`);
+  // console.log(`indexes: ${JSON.stringify(indexes)}`);
 
   var newSVGpathsD = [];
 
   for(i=0; i<indexes.length; i++){
     var subPath = "";
     if(i == 0){
-      console.log('first index');
+      // console.log('first index');
       subPath = svgPathD.substring(i, indexes[i+1]);
     }else if(i == indexes.length-1){
       // last path
-      console.log('last index');
+      // console.log('last index');
       subPath = svgPathD.substring(indexes[i]);
     }else{
-      console.log(`substring ${indexes[i]} to ${indexes[i+1]}`);
+      // console.log(`substring ${indexes[i]} to ${indexes[i+1]}`);
       subPath = svgPathD.substring(indexes[i], indexes[i+1]);
     }
     // sometimes run into issue with the path not ending with Z - a quick fix here
     if(subPath.slice(-1) != "Z"){
       subPath = subPath.replaceAt(subPath.length-1, "Z");
     }
-    console.log(`${i} subPath with length ${subPath.length} : ${subPath}`);
-    console.log(`----------------------`);
+    // console.log(`${i} subPath with length ${subPath.length} : ${subPath}`);
+    // console.log(`----------------------`);
     newSVGpathsD.push(subPath);
   }
 
-  console.log(`newSVGpathsD: ${JSON.stringify(newSVGpathsD)}`);
+  // console.log(`newSVGpathsD: ${JSON.stringify(newSVGpathsD)}`);
 
   for(x=0; x<newSVGpathsD.length; x++){
-    console.log(`path creation loop ${x}`);
+    // console.log(`path creation loop ${x}`);
     var path = new ClipperLib.Path();
     
     // var properties = pathProperties.svgPathProperties(newSVGpathsD[x]);
@@ -330,22 +331,22 @@ function createPath(svgPathD){
     var pts = point(newSVGpathsD[x]);
     var len = Math.round(pts.length());
 
-    console.log(`path length ${len}`);
+    // console.log(`path length ${len}`);
   
     for(var i=0; i<len; i++){
       var p = pts.at(i);
       // var p = properties.getPointAtLength(i);
-      console.log(`${i} p ${JSON.stringify(p)}`);
+      // console.log(`${i} p ${JSON.stringify(p)}`);
       // path.push(new ClipperLib.IntPoint(p.x, p.y));
       path.push(new ClipperLib.IntPoint(p[0], p[1]));
     }
-    console.log(`path: ${JSON.stringify(path)}`);
-    console.log('');
+    // console.log(`path: ${JSON.stringify(path)}`);
+    // console.log('');
     // add this array to paths
     paths.push(path);
   }
 
-  console.log(`paths: ${JSON.stringify(paths)}`);
+  // console.log(`paths: ${JSON.stringify(paths)}`);
 
   return paths;
 }

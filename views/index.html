@@ -9,65 +9,62 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Stencilfy</title>
-    <link id="favicon" rel="icon" href="assets/stencilfy.ico" type="image/x-icon">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-    
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<head>
+  <title>Stencilfy</title>
+  <link id="favicon" rel="icon" href="assets/stencilfy.ico" type="image/x-icon">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+    integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
-  </head>
-  
-  <body>
+</head>
 
-    <div id="smallOverview">
-      <h1>Stencilfy</h1>
-      <hr>
-      <p>
-          Stencilfy creates stenciled text by removing internal paths (called islands or counters) from your characters, so</p>
-      </p>
+<body>
 
-      <img src="assets/bodega_default.svg"/>
+  <div id="smallOverview" class="hidden">
+    <h1>Stencilfy</h1>
+    <hr>
+    <p>
+      Stencilfy creates stenciled text by removing internal paths (called islands or counters) from your characters, so
+    </p>
+    </p>
 
-      <p>becomes</p>
+    <img src="assets/bodega_default.svg" />
 
-      <img src="assets/bodega_stencil.svg"/>
+    <p>becomes</p>
 
-      <p>This can be especially handy if you're laser-cutting text!</p>
+    <img src="assets/bodega_stencil.svg" />
 
-      <p>You can import any font of your choice and export an SVG so you can bring the output into CorelDraw, Illustrator, or the graphics software of your choice.
-      </p>
+    <p>This can be especially handy if you're laser-cutting text!</p>
 
-      <p>Here's a video of the full workflow</p>
-      <video controls autoplay width="100%">
-        <source src="/assets/stencilfy.mp4" type="video/mp4">
-      </video>
-      
-      <p>
-        Stencilfy works best on desktop, so open it on a larger screen to get started.
-      </p>
-      <hr>
-      <p>
-        Built by <a href="https://twitter.com/scientiffic" target="_blank">@scientiffic</a> at <a href="https://www.recurse.com/" target="_blank">Recurse</a> using <a href="https://www.npmjs.com/package/js-clipper" target="_blank">clipper.js</a> and <a href="https://github.com/shrhdk/text-to-svg" target="_blank">text-to-svg</a>.</p>
-      </p>
-    </div>
+    <p>You can import any font of your choice and export an SVG so you can bring the output into CorelDraw, Illustrator,
+      or the graphics software of your choice.
+    </p>
+
+    <p>Here's a video of the full workflow</p>
+    <video controls autoplay width="100%">
+      <source src="/assets/stencilfy.mp4" type="video/mp4">
+    </video>
+
+    <p>
+      Stencilfy works best on desktop, so open it on a larger screen to get started.
+    </p>
+    <hr>
+  </div>
 
 
-    <div id="header">
-      <h1>Stencilfy</h1>
-      <p>Removes <u>islands</u> from your text to make it laser-cutter ready.</p>
-    </div>
+  <div id="header">
+    <h1>Stencilfy</h1>
+    <p>Makes your text laser-cutter friendly.</p>
+  </div>
 
-    <div id="content">
-      <div id="instructions">      
-        <div class="instructions-container">
+  <div id="content">
+    <div id="instructions">
+      <div class="instructions-container">
         <h2 class="step">
           1. Enter your text
         </h2>
@@ -81,9 +78,9 @@
           2. Select a font
         </h2>
         <br>
-        <img src="/assets/Roboto.svg" class="fontBtn active" data-name="Roboto"/>
-        <img src="/assets/FredokaOne.svg" class="fontBtn" data-name="FredokaOne"/>
-        <img src="/assets/Righteous.svg" class="fontBtn" data-name="Righteous"/>
+        <img src="/assets/Roboto.svg" class="fontBtn active" data-name="Roboto" onClick="toggleFont(this)" />
+        <img src="/assets/FredokaOne.svg" class="fontBtn" data-name="FredokaOne" onClick="toggleFont(this)" />
+        <img src="/assets/Righteous.svg" class="fontBtn" data-name="Righteous" onClick="toggleFont(this)" />
       </div>
 
       <div class="instructions-container" style="margin-left: 15px;">
@@ -95,206 +92,213 @@
         <input id="fontFile" type="file" name="fontFile" onchange="saveFont()">
         <label for="fontFile" class="fontLabel"><i class="fa fa-fileupload"></i>Choose a file...</label>
         <br>
-        <div class="fontName"></div>
+        <div class="fontName hidden"></div>
       </div>
       <div class="instructions-container">
         <h2 class="step">
           3. Click the button below to stencilfy!
         </h2><br>
-        <button type="submit" class="stencilBtn">Stencilfy <i class="fa fa-magic"></i></button>
+        <button type="submit" id="stencilBtn">Stencilfy <i class="fa fa-magic"></i></button>
       </div>
     </div>
-      
-      <!-- Test imported SVG -->
-      <div id="output">
+
+    <!-- Test imported SVG -->
+    <div id="output">
 
       <div class="output-section stencil">
         <h2 class="outputType">Stencilfied</h2>
 
         <div id="svg-stencil" class="output-container"></div>
-        <a><button class="export stencil">Export SVG</button></a>
+        <a><button class="export stencil" onClick="exportSVG(this)">Export SVG</button></a>
       </div>
 
-        <div class="output-section default">
-          <h2 class="outputType">Original Font (for reference)</h2>
-          <div id="svg-default" class="output-container"></div>
-          <a><button class="export default">Export SVG</button></a>
-        </div>
+      <div class="output-section default">
+        <h2 class="outputType">Original Font (for reference)</h2>
+        <div id="svg-default" class="output-container"></div>
+        <a><button class="export default" onClick="exportSVG(this)">Export SVG</button></a>
       </div>
-      
     </div>
 
-    <div class="footer">
-      Built by <a href="https://twitter.com/scientiffic" target="_blank">@scientiffic</a> at <a href="https://www.recurse.com/" target="_blank">Recurse</a>
-    </div>
+  </div>
 
-  </body>
-  </html>
-    
-    <script>    
+  <div class="footer">
+    Built by <a href="https://twitter.com/scientiffic" target="_blank">@scientiffic</a> at <a
+      href="https://www.recurse.com/" target="_blank">Recurse</a>
+  </div>
 
-      // toggle fonts when user selects different fonts
-      $('.fontBtn').on('click', function(){
-        $('.fontBtn').removeClass('active');
-        $(this).addClass('active');
+</body>
 
-        // remove font name if necessary
-        $('.fontName').fadeOut();
+</html>
 
-        var font = $(this).data('name');
-        // load the new font on the server
-        selectFont(font);
+<script>
 
-        if($('input[name="text"]').val()){
-          // rerun stencil with selected font
-          $('.stencilBtn').click();
-        } 
-      });
-      
-      var validFontTypes = ["otf", "ttf", "woff"];
-      // saveFont()
-      // save the uploaded font file to a temporary file to use in node
-      function saveFont(){
-        // console.log('saveFont triggered');
+  function toggleFont(el) {
+    // set active font
+    let fontBtns = document.querySelectorAll('.fontBtn');
+    fontBtns.forEach((btn) => btn.classList.remove('active'));
+    el.classList += ' active';
 
-        var fileName = $('#fontFile')[0].files[0].name;
-        var fileExt = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
-        if(validFontTypes.includes(fileExt)){
-          var formData = new FormData();
-          formData.append('file', $('#fontFile')[0].files[0]);
+    // remove fontname if necessary
+    document.querySelector('.fontName').classList.add('hidden');
 
-          $.ajax({
-            type: 'POST',
-            url: '/saveFont',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(data){
-              console.log(data);
-              // show font name
-              $('.fontName').html(data);
-              $('.fontName').css('display', 'inline-block');
-              $('.fontName').fadeIn();
-              
-              // clear selected font
-              $('.fontBtn').removeClass('active');
+    // select the font
+    let font = el.getAttribute('data-name');
+    selectFont(font);
 
-              if($('input[name="text"]').val()){
-                // rerun stencil with selected font
-                $('.stencilBtn').click();
-              }  
-            }
-          });
-        }else{
-          window.alert('Please select a valid .otf, .ttf., or .woff font file');
+    let text = document.querySelector('input[name="text"');
+    if (text.value) {
+      // run stencilfy
+      document.getElementById('stencilBtn').click();
+    }
+  }
+
+  // save the uploaded font file to a temporary file to use in node
+  function saveFont() {
+    console.log('added new font');
+    let file = document.getElementById('fontFile').files[0];
+    var fileName = file.name;
+    var fileExt = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
+    var validFontTypes = ["otf", "ttf", "woff"];
+
+    if (validFontTypes.includes(fileExt)) {
+      var formData = new FormData();
+      formData.append('file', file);
+
+      const http = new XMLHttpRequest;
+      http.open("POST", '/saveFont', true);
+      http.send(formData);
+
+      http.onload = function () {
+        let response = http.response;
+        console.log('saved font: ', response);
+        let fontName = document.querySelector('.fontName');
+        fontName.innerHTML = response;
+        fontName.classList.remove('hidden');
+        
+        // clear selected font
+        let fontBtns = document.querySelectorAll('.fontBtns');
+        fontBtns.forEach((btn) => {
+          btn.classList.remove('active');
+        });
+
+        // return stencilfy with font
+        let text = document.querySelector('input[name="text"');
+        if (text.value) {
+          document.getElementById('stencilBtn').click();
         }
-      }
-      
 
-// selectFont(font) 
-// switches font from pre-selected options
-  function selectFont(font){
-    $.ajax({
-       type: 'POST',
-       data: JSON.stringify({font: font}),
-       contentType: 'application/json',
-       url: '/loadFont',
-       success: function(data){
-         console.log('successfully loaded font');
-       }
-    });
+      // clear file font for reupload
+      document.getElementById('fontFile').value = null;
+      };
+
+    } else {
+      window.alert('Please select a valid .otf, .ttf, or .woff font file');
+    }
+  }
+
+
+  // switches font from pre-selected options
+  function selectFont(font) {
+
+    const http = new XMLHttpRequest;
+    http.open("POST", '/loadFont', true);
+    http.setRequestHeader('Content-Type', 'application/json');
+    http.send(JSON.stringify({ font: font }));
+
+    http.onload = function () {
+      console.log('successfully loaded font');
+    }
   }
 
   // add svg output to page
-      
-    function addSVGtoPage(origSVG, newSVG){
-      $('#svg-default').html(origSVG);
-      $('#svg-stencil').html(newSVG);
+  function addSVGtoPage(origSVG, newSVG) {
+    document.getElementById('svg-default').innerHTML = origSVG;
+    document.getElementById('svg-stencil').innerHTML = newSVG;
+  }
+
+  // enable user to export SVGs
+  function exportSVG(el) {
+    console.log(el);
+    var svgData = el.closest('.output-section').querySelector('svg').outerHTML;
+    var svgBlob = new Blob([svgData], { type: "image/svg+xml" });
+    var svgUrl = URL.createObjectURL(svgBlob);
+    var downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    if (el.classList.contains('stencil')) {
+      downloadLink.download = "stencil.svg";
+    } else {
+      downloadLink.download = "default.svg";
     }
 
-    // enable user to export SVGs
-    $('button.export').click(function(){
-        console.log('clicked export');
-        var svgData = $(this).closest('.output-section').find('svg')[0].outerHTML;
-        var svgBlob = new Blob([svgData], {type:"image/svg+xml"});
-        var svgUrl = URL.createObjectURL(svgBlob);
-        console.log(`svgUrl: ${svgUrl}`);
-        var downloadLink = document.createElement("a");
-        downloadLink.href = svgUrl;
-        if($(this).hasClass('stencil')){
-          downloadLink.download = "stencil.svg";
-        }else{
-          downloadLink.download = "default.svg";
-        }
-        
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
+  // run stencilfy
+  document.getElementById('stencilBtn').addEventListener('click', function (e) {
+    e.preventDefault();
+    var data = { text: document.querySelector('input[name="text"]').value };
+    const http = new XMLHttpRequest;
+    http.open("POST", '/createStencil', true);
+    http.setRequestHeader('Content-Type', 'application/json');
+    http.send(JSON.stringify(data));
+
+    http.onload = function () {
+      let response = http.response;
+      let svg = JSON.parse(response);
+      console.log('svg ', svg);
+      addSVGtoPage(svg.origSVG, svg.newSVG);
+      let output = document.getElementById('output');
+      output.classList.add('visible');
+    }
+  });
+
+  // enable enter key fron input field
+  document.getElementById('text').addEventListener('keypress', function (e) {
+    if (e.keyCode == 13) {
+      e.preventDefault();
+      document.getElementById('stencilBtn').click();
+    }
+  });
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.innerWidth < 500) {
+      let elementsToHide = document.querySelectorAll('div:not(#smallOverview)');
+      elementsToHide.forEach((el) => {
+        el.classList.add('hidden');
       });
+      document.getElementById('smallOverview').classList.remove('hidden');
+    }
+  });
 
-    // run stencilfy
-     $('.stencilBtn').click(function(e){
-       e.preventDefault();
-       // console.log('stencil button clicked');
-       
-       var data = {};
-       data.text = $('input[name="text"]').val();
-       
-       $.ajax({
-         type: 'POST',
-         data: JSON.stringify(data),
-         contentType: 'application/json',
-         url: '/createStencil',
-         success: function(data){
-           console.log('success');
-           var svg = data;
-           console.log(JSON.stringify(data));
-           addSVGtoPage(svg.origSVG, svg.newSVG);
-           $('#output').addClass('active').fadeIn();
-         }
-       });
-       
-     });
-
-     // prevent enter key input from text field
-     $('#text').keypress(function(e){
-      if(e.keyCode == 13){
-        e.preventDefault();
-        $('.stencilBtn').click();
-      }
-     });
-
-
-
-     $(document).ready(function(){
-        // $('.stencilBtn').click();
-         if($(window).width() < 500){
-          $('div').not('#smallOverview').hide();
-          $('#smallOverview').show();
-        }
-     });
-
-      $(window).resize(function(){
-        if($(window).width() > 500){
-          $('div').not('#smallOverview').show();
-          if($('#output').hasClass('active')==false){
-            $('#output').hide();
-          }
-          $('#smallOverview').hide();
-        }
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 500) {
+      let elementsToReveal = document.querySelectorAll('div:not(#smallOverview)');
+      elementsToReveal.forEach((el) => {
+        el.classList.remove('hidden');
       });
-      
-    </script>
+      document.getElementById('smallOverview').classList.add('hidden');
+      // let output = document.getElementById('output');
+      // if(!output.classList.includes('active')){
+      //   output.classList += ' hidden';
+      // }
+    }
+  });
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122566847-1"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+</script>
 
-    gtag('config', 'UA-122566847-1');
-    </script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-122566847-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
 
-  </body>
+  gtag('config', 'UA-122566847-1');
+</script>
+
+</body>
+
 </html>
