@@ -81,6 +81,10 @@ label.fontLabel:hover{
   padding: 0px 20px;
 }
 
+.instructions-container:first-of-type{
+  margin-top: 0;
+}
+
 .instructions-container{
   flex-grow: 1;
   padding: 0 20px;
