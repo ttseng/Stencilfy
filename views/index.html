@@ -154,7 +154,7 @@
 
   // save the uploaded font file to a temporary file to use in node
   function saveFont() {
-    console.log('added new font');
+    // console.log('added new font');
     let file = document.getElementById('fontFile').files[0];
     var fileName = file.name;
     var fileExt = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
@@ -206,7 +206,7 @@
     http.send(JSON.stringify({ font: font }));
 
     http.onload = function () {
-      console.log('successfully loaded font');
+      // console.log('successfully loaded font');
     }
   }
 
@@ -218,7 +218,6 @@
 
   // enable user to export SVGs
   function exportSVG(el) {
-    console.log(el);
     var svgData = el.closest('.output-section').querySelector('svg').outerHTML;
     var svgBlob = new Blob([svgData], { type: "image/svg+xml" });
     var svgUrl = URL.createObjectURL(svgBlob);
